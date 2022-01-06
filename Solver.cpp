@@ -16,8 +16,8 @@ bool Solver::belong(Point point, Square square, unsigned int side_length)
  */
 Point* Solver::middle(unsigned int first, unsigned int second)
 {
-	Segment x1{}, x2{}, y1{}, y2{};
-	Point *req = nullptr;
+	Segment x1{}, x2{}, y1{}, y2{};                     // Проекции квадратов на координатные оси
+	Point *req = nullptr;                               // Середина пересечения пары квадратов
 
 	x1.begin = data.squares[first].corner.x;
 	x1.end = x1.begin + data.side_length;
@@ -44,14 +44,16 @@ Point* Solver::middle(unsigned int first, unsigned int second)
 
 
 /*
- * Возвращает вектор с координатами точек покрытия.
+ * Возвращает количество шагов, за которое была решена задача.
+ * После выполнения функции в векторе points хранятся координаты точек покрытия.
  * В зависимости от переданного параметра улучшает точность или скорость работы.
  */
-vector<Point> Solver::cover(bool accuracy_time)
+unsigned int Solver::cover(vector<Point> &points, bool accuracy_time)
 {
-	vector<Point> points;
-	Point *req;
-	bool intersected = false;
+	Point *req;                                         // Середина пересечения пары квадратов
+
+	unsigned int steps = 0;                             // Количество шагов в решении
+	bool intersected = false;                           // Флаг наличия пересечения
 
 	for (int i = 0; i < data.squares.size(); ++i)
 	{
@@ -65,7 +67,7 @@ vector<Point> Solver::cover(bool accuracy_time)
 		{
 			req = middle(i, j);
 
-			if (!data.squares[i].covered && !data.squares[j].covered && (req != nullptr))
+			if (++steps && !data.squares[i].covered && !data.squares[j].covered && (req != nullptr))
 			{
 				data.squares[i].covered = data.squares[j].covered = true;
 				points.push_back(*req);
@@ -85,5 +87,5 @@ vector<Point> Solver::cover(bool accuracy_time)
 		if (!data.squares[i].covered)
 			points.push_back(*middle(i, i));
 
-	return points;
+	return steps;
 }
