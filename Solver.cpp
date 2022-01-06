@@ -11,13 +11,13 @@ bool Solver::belong(Point point, Square square, unsigned int side_length)
 
 
 /*
- * Если квадраты с заданными номерами пересекаются, возвращает
- * координаты середины их пересечения, иначе {-1; -1}.
+ * Если квадраты пересекаются, возвращает указатель на
+ * координаты середины их пересечения, иначе - nullptr.
  */
 Point* Solver::middle(unsigned int first, unsigned int second)
 {
-	Segment x1{}, x2{}, y1{}, y2{};                     // Проекции квадратов на координатные оси
-	Point *req = nullptr;                               // Середина пересечения пары квадратов
+	Segment x1{}, x2{}, y1{}, y2{};                     // Проекции квадратов на координатные оси.
+	Point *req = nullptr;                               // Середина пересечения пары квадратов.
 
 	x1.begin = data.squares[first].corner.x;
 	x1.end = x1.begin + data.side_length;
@@ -51,10 +51,10 @@ Point* Solver::middle(unsigned int first, unsigned int second)
  */
 unsigned int Solver::cover(vector<Point> &points, bool accuracy_time)
 {
-	Point *req;                                         // Середина пересечения пары квадратов
+	Point *req;                                         // Середина пересечения пары квадратов.
 
-	unsigned int steps = 0;                             // Количество шагов в решении
-	bool intersected = false;                           // Флаг наличия пересечения
+	unsigned int steps = 0;                             // Количество шагов в решении.
+	bool intersected = false;                           // Флаг наличия пересечения.
 
 	for (int i = 0; i < data.squares.size(); ++i)
 	{
