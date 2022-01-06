@@ -75,7 +75,7 @@ unsigned int Solver::cover(vector<Point> &points, bool accuracy_time)
 
 				if (accuracy_time)
 					for (int k = 0; k < data.squares.size(); ++k)
-						if ((k != i) && (k != j) && belong(*req, data.squares[k], data.side_length))
+						if (++steps && (k != i) && (k != j) && belong(*req, data.squares[k], data.side_length))
 							data.squares[k].covered = true;
 
 				intersected = true;
