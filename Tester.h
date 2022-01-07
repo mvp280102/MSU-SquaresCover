@@ -23,7 +23,7 @@ struct TestResults
 	vector<Point> points;               // Точки покрытия.
 
 	unsigned int steps;                 // Количество шагов в тесте.
-	double time;        ;               // Время, затраченное на тест.
+	double time;                        // Время, затраченное на тест.
 };
 
 
@@ -32,12 +32,14 @@ class Tester
 {
 	private:
 
-	Solver *solver = nullptr;           // Экземпляр класса, решающего задачу.
-	TestData data;                      // Набор общих данных для тестов.
+	Solver *solver = nullptr;               // Экземпляр класса, решающего задачу.
+	TestData data;                          // Набор общих данных для тестов.
 
-	unsigned int average_steps = 0;     // Среднее количество шагов в тесте.
-	double average_time = 0;            // Среднее время, затраченное на тест.
-	vector<TestResults> results;        // Набор результатов для тестов.
+	double average_time = 0;                // Среднее время, затраченное на тест.
+	unsigned long int average_points = 0;   // Среднее количество точек покрытия в тесте.
+	unsigned long int average_steps = 0;    // Среднее количество шагов в тесте.
+
+	vector<TestResults> results;            // Набор результатов для тестов.
 
 
 	public:
@@ -52,8 +54,12 @@ class Tester
 	void run_tests();
 
 	/*
-	 * Выводит на экран общие данные для тестов, результаты
-	 * для каждого теста и среднее время, затраченное на тест.
+	 * TODO: Написать комментарий.
 	 */
 	void show_results();
+
+	/*
+	 * TODO: Написать комментарий.
+	 */
+	void write_details(const char *filename);
 };

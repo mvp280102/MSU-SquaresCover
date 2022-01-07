@@ -22,15 +22,15 @@ struct Square
 // Отрезок на прямой.
 struct Segment
 {
-	double begin;                         // Координата начала.
-	double end;                           // Координата конца.
+	double begin;                        // Координата начала.
+	double end;                          // Координата конца.
 };
 
 // Набор данных для задачи.
 struct TaskData
 {
 	unsigned int side_length;           // Длина стороны одного квадрата.
-	vector<Square> squares;             // Вектор квадратов.
+	vector<Square> squares;             // Квадраты.
 };
 
 
@@ -80,8 +80,10 @@ class Solver
 	 * вычисление координат середины этого пересечения в соответствующем случае.
 	 *
 	 * Параметры:
-	 * vector<Point> &points - координаты точек покрытия
+	 * set<Point> &points - координаты точек покрытия
 	 * bool time_accuracy - true улучшает точность, false - скорость работы
 	 */
-	unsigned int cover(vector<Point> &points, bool accuracy_time = true);
+	//unsigned int old_cover(set<Point> &points, bool accuracy_time = true);
+
+	unsigned int cover(vector<Point> &points);
 };
