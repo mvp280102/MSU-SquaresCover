@@ -2,12 +2,10 @@
 
 
 /*
- * Считывает с клавиатуры данные для одной задачи и
- * инициализирует ими экземпляр класса, решающего ее.
+ * Считывает с клавиатуры данные для одной задачи.
  */
 void Interface::read_data()
 {
-	TaskData data{};
 	Point corner{};
 
 	unsigned int squares_amount;
@@ -26,6 +24,26 @@ void Interface::read_data()
 		cin >> corner.x >> corner.y;
 		data.squares.push_back(Square{false, Point{corner.x, corner.y}});
 	}
+}
+
+
+/*
+ * Запускает решение задачи на данных, введенных с клавиатуры.
+ * В зависимости от переданного параметра описывает решение
+ * подробно или просто выдает конечный ответ.
+ */
+void Interface::solve(bool show_steps)
+{
+	TaskResults res{};
+	clock_t start, stop;
 
 	solver = new Solver(data);
+
+	start = clock();
+	res.steps = solver->cover(res.points);
+	stop = clock();
+
+	res.time = (double)(stop - start) / CLOCKS_PER_SEC;
+
+	delete solver;
 }
