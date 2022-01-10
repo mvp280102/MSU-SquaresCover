@@ -17,8 +17,8 @@ bool Solver::belong(Point point, Square square)
  */
 Point* Solver::middle(unsigned int first, unsigned int second)
 {
-	Segment x1 {}, x2 {}, y1 {}, y2 {};                     // Проекции квадратов на координатные оси.
-	Point *req = nullptr;                               // Середина пересечения пары квадратов.
+	Segment x1{}, x2{}, y1{}, y2{};
+	Point *req = nullptr;
 
 	x1.begin = data.squares.at(first).corner.x;
 	x1.end = x1.begin + data.side_length;
