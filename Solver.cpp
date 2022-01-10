@@ -1,12 +1,13 @@
 #include "Solver.h"
 
+
 /*
  * Если точка принадлежит квадрату, возвращает true, иначе - false.
  */
-bool Solver::belong(Point point, Square square, unsigned int side_length)
+bool Solver::belong(Point point, Square square)
 {
-	return ((point.x > square.corner.x) && (point.x < square.corner.x + side_length)) &&
-			((point.y > square.corner.y) && (point.y < square.corner.y + side_length));
+	return ((point.x > square.corner.x) && (point.x < square.corner.x + data.side_length)) &&
+			((point.y > square.corner.y) && (point.y < square.corner.y + data.side_length));
 }
 
 
@@ -16,7 +17,7 @@ bool Solver::belong(Point point, Square square, unsigned int side_length)
  */
 Point* Solver::middle(unsigned int first, unsigned int second)
 {
-	Segment x1{}, x2{}, y1{}, y2{};                     // Проекции квадратов на координатные оси.
+	Segment x1 {}, x2 {}, y1 {}, y2 {};                     // Проекции квадратов на координатные оси.
 	Point *req = nullptr;                               // Середина пересечения пары квадратов.
 
 	x1.begin = data.squares.at(first).corner.x;
@@ -31,7 +32,7 @@ Point* Solver::middle(unsigned int first, unsigned int second)
 	y2.begin = data.squares.at(second).corner.y;
 	y2.end = y2.begin + data.side_length;
 
-	if  (((x1.end > x2.begin) || (x2.end > x1.begin)) && ((y1.end > y2.begin) || (y2.end > y1.begin)))
+	if (((x1.end > x2.begin) || (x2.end > x1.begin)) && ((y1.end > y2.begin) || (y2.end > y1.begin)))
 	{
 		req = new Point;
 
@@ -44,14 +45,33 @@ Point* Solver::middle(unsigned int first, unsigned int second)
 
 
 /*
- * TODO: Написать комментарий.
+ * Определяет, пересекаются ли отрезки и возвращает соответствующее значение.
+ */
+int Solver::intersection(const Segment &first, const Segment &second)
+{
+	if ((first.begin < second.begin) && (first.end > second.begin))
+		return -1;
+	else if ((first.begin < second.end) && (first.end > second.end))
+		return 1;
+	else if ((first.begin >= second.begin) && (first.end <= second.end))
+		return 2;
+	else
+		return 0;
+}
+
+
+/*
+ * Решает задачу покрытия квадратов точками.
+ * После выполнения функции points содержит координаты точек покрытия.
+ * Возвращает количество шагов, за которое была решена задача.
  */
 unsigned int Solver::cover(vector<Point> &points)
 {
-	Segment x_intersection{}, y_intersection{};
+	Segment x_intersection{}, y_intersection{}, x_current{}, y_current{};
 	Point point{};
 
 	unsigned long int steps = 0;
+	int x_flag, y_flag;
 
 	for (int i = 0; i < data.squares.size(); ++i)
 		if (!data.squares.at(i).covered)
@@ -65,21 +85,27 @@ unsigned int Solver::cover(vector<Point> &points)
 			for (int j = i + 1; j < data.squares.size(); ++j)
 				if (++steps && !data.squares.at(j).covered)
 				{
-					if ((x_intersection.end > data.squares.at(j).corner.x) && (x_intersection.begin < data.squares.at(j).corner.x + data.side_length))
-						x_intersection.begin = data.squares.at(j).corner.x;
-					else if ((x_intersection.begin < data.squares.at(j).corner.x + data.side_length) && (x_intersection.end > data.squares.at(j).corner.x))
-						x_intersection.end = data.squares.at(j).corner.x + data.side_length;
+					x_current.begin = data.squares.at(j).corner.x;
+					x_current.end = x_current.begin + data.side_length;
+
+					y_current.begin = data.squares.at(j).corner.y;
+					y_current.end = y_current.begin + data.side_length;
+
+					x_flag = intersection(x_intersection, x_current);
+					y_flag = intersection(y_intersection, y_current);
+
+					if (x_flag && y_flag)
+					{
+						if (x_flag == -1) x_intersection.begin = x_current.begin;
+						else if (x_flag == 1) x_intersection.end = x_current.end;
+
+						if (y_flag == -1) y_intersection.begin = y_current.begin;
+						else if (y_flag == 1) y_intersection.end = y_current.end;
+
+						data.squares.at(j).covered = true;
+					}
 					else
 						continue;
-
-					if ((y_intersection.end > data.squares.at(j).corner.y) && (y_intersection.begin < data.squares.at(j).corner.y + data.side_length))
-						y_intersection.begin = data.squares.at(j).corner.y;
-					else if ((y_intersection.begin < data.squares.at(j).corner.y + data.side_length) && (y_intersection.end > data.squares.at(j).corner.y))
-						y_intersection.end = data.squares.at(j).corner.y + data.side_length;
-					else
-						continue;
-
-					data.squares.at(j).covered = true;
 				}
 
 			data.squares.at(i).covered = true;

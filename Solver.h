@@ -47,9 +47,8 @@ class Solver
 	 * Параметры:
 	 * Point point - точка
 	 * Square square - квадрат
-	 * unsigned int side_length - сторона квадрата
 	 */
-	static bool belong(Point point, Square square, unsigned int side_length);
+	bool belong(Point point, Square square);
 
 	/*
 	 * Если квадраты пересекаются, возвращает указатель на
@@ -61,6 +60,16 @@ class Solver
 	 */
 	Point* middle(unsigned int first, unsigned int second);
 
+	/*
+	 * Определяет, пересекаются ли отрезки.
+	 *
+	 * Если первый пересекается со вторым слева, возвращает -1.
+	 * Если первый пересекается со вторым справа, возвращает 1.
+	 * Если первый полностью лежит во втором, возвращает 2.
+	 * Во всех остальных случаях возвращает 0.
+	 */
+	static int intersection(const Segment &first, const Segment &second);
+
 
 	public:
 
@@ -68,6 +77,19 @@ class Solver
 	 * Конструктор.
 	 */
 	explicit Solver(TaskData data) : data(move(data)) {}
+
+	/*
+	 * Решает задачу покрытия квадратов точками.
+	 *
+	 * После выполнения функции points содержит координаты точек покрытия.
+	 *
+	 * Возвращает количество шагов, за которое была решена задача.
+	 * Под шагом понимается анализ пары квадратов на предмет их пересечения.
+	 *
+	 * Параметры:
+	 * vector<Point> &points - координаты точек покрытия
+	 */
+	unsigned int cover(vector<Point> &points);
 
 	/*
 	 * Решает задачу покрытия квадратов точками.
@@ -84,6 +106,4 @@ class Solver
 	 * bool time_accuracy - true улучшает точность, false - скорость работы
 	 */
 	//unsigned int old_cover(set<Point> &points, bool accuracy_time = true);
-
-	unsigned int cover(vector<Point> &points);
 };
