@@ -44,7 +44,9 @@ class Tester
 
 	public:
 
-	// Конструктор.
+	/*
+	 * Конструктор.
+	 */
 	explicit Tester(TestData data) : data(data) {}
 
 	/*

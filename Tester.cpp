@@ -17,7 +17,7 @@ void Tester::run_tests()
 	{
 		cout << "Running test " << i + 1 << "...\n";
 
-		clock_t start, stop;                            // Время начала и конца выполнения определенного теста.
+		clock_t start, stop;
 
 		res.squares.reserve(data.squares_amount);
 
