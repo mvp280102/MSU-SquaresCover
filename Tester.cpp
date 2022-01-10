@@ -131,4 +131,6 @@ void Tester::write_details(const char *filename)
 		<< "Average points amount: " << average_points << ".\n"
 		<< "Average steps amount: " << average_steps << ".\n"
 		<< endl;
+
+	out.close();
 }
