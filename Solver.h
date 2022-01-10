@@ -33,6 +33,16 @@ struct TaskData
 	vector<Square> squares;             // Квадраты.
 };
 
+// Результаты решения задачи.
+struct TaskResults
+{
+	vector<Square> squares;             // Квадраты.
+	vector<Point> points;               // Точки покрытия.
+
+	unsigned int steps;                 // Количество шагов в тесте.
+	double time;                        // Время, затраченное на тест.
+};
+
 
 // Класс, решающий задачу.
 class Solver

@@ -7,7 +7,7 @@
  */
 void Tester::run_tests()
 {
-	TestResults res{};
+	TaskResults res{};
 
 	results.reserve(data.tests_amount);
 

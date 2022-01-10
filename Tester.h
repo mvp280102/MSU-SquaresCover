@@ -16,16 +16,6 @@ struct TestData
 	unsigned int side_length;           // Длина стороны одного квадрата.
 };
 
-// Результаты одного теста.
-struct TestResults
-{
-	vector<Square> squares;             // Квадраты.
-	vector<Point> points;               // Точки покрытия.
-
-	unsigned int steps;                 // Количество шагов в тесте.
-	double time;                        // Время, затраченное на тест.
-};
-
 
 // Класс, генерирующий задачи и тестирующий алгоритм.
 class Tester
@@ -39,7 +29,7 @@ class Tester
 	unsigned long int average_points = 0;   // Среднее количество точек покрытия в тесте.
 	unsigned long int average_steps = 0;    // Среднее количество шагов в тесте.
 
-	vector<TestResults> results;            // Набор результатов для тестов.
+	vector<TaskResults> results;            // Набор результатов решения тестовых задач.
 
 
 	public:
