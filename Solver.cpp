@@ -61,11 +61,54 @@ int Solver::intersection(const Segment &first, const Segment &second)
 
 
 /*
- * Решает задачу покрытия квадратов точками.
+ * Решает задачу покрытия квадратов точками простым алгоритмом.
  * После выполнения функции points содержит координаты точек покрытия.
  * Возвращает количество шагов, за которое была решена задача.
  */
-unsigned int Solver::cover(vector<Point> &points)
+unsigned long int Solver::cover_simple(vector<Point> &points)
+{
+	Point *req;
+
+	unsigned long int steps = 0;
+	bool intersected = false;
+
+	for (int i = 0; i < data.squares.size(); ++i)
+	{
+		if (intersected)
+		{
+			intersected = false;
+			continue;
+		}
+
+		for (int j = i + 1; j < data.squares.size(); ++j)
+		{
+			req = middle(i, j);
+
+			if (++steps && !data.squares.at(i).covered && !data.squares.at(i).covered && (req != nullptr))
+			{
+				data.squares.at(i).covered = data.squares.at(j).covered = true;
+				points.push_back(*req);
+
+				intersected = true;
+				break;
+			}
+		}
+	}
+
+	for (int i = 0; i < data.squares.size(); ++i)
+		if (!data.squares.at(i).covered)
+			points.push_back(*middle(i, i));
+
+	return steps;
+}
+
+
+/*
+ * Решает задачу покрытия квадратов точками жадным алгоритмом.
+ * После выполнения функции points содержит координаты точек покрытия.
+ * Возвращает количество шагов, за которое была решена задача.
+ */
+unsigned long int Solver::cover_greedy(vector<Point> &points)
 {
 	Segment x_intersection{}, y_intersection{}, x_current{}, y_current{};
 	Point point{};
@@ -118,55 +161,3 @@ unsigned int Solver::cover(vector<Point> &points)
 
 	return steps;
 }
-
-
-/*
- * Решает задачу покрытия квадратов точками.
- * После выполнения функции в векторе points хранятся координаты точек покрытия.
- * В зависимости от переданного параметра улучшает точность или скорость работы.
- * Возвращает количество шагов, за которое была решена задача.
- */
-/*
-unsigned int Solver::old_cover(vector<Point> &points, bool accuracy_time)
-{
-	Point *req;                                         // Середина пересечения пары квадратов.
-
-	unsigned int steps = 0;                             // Количество шагов в решении.
-	bool intersected = false;                           // Флаг наличия пересечения.
-
-	for (int i = 0; i < data.squares.size(); ++i)
-	{
-		if (intersected)
-		{
-			intersected = false;
-			continue;
-		}
-
-		for (int j = i + 1; j < data.squares.size(); ++j)
-		{
-			req = middle(i, j);
-
-			if (++steps && !data.squares.at(i).covered && !data.squares.at(i).covered && (req != nullptr))
-			{
-				data.squares.at(i).covered = data.squares.at(j).covered = true;
-
-				//if (points.find(*req) == points.end())
-					points.insert(*req);
-
-				if (accuracy_time)
-					for (int k = j + 1; k < data.squares.size(); ++k)
-						if (++steps && belong(*req, data.squares.at(k), data.side_length))
-							data.squares.at(k).covered = true;
-
-				intersected = true;
-				break;
-			}
-		}
-	}
-
-	for (int i = 0; i < data.squares.size(); ++i)
-		if (!data.squares.at(i).covered)
-			points.insert(*middle(i, i));
-
-	return steps;
-}*/
