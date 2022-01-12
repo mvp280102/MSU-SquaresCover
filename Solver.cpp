@@ -61,17 +61,44 @@ bool Solver::belong(const Point &point, const Square &square)
 
 
 /*
+ * Вычисляет суммарную ошибку для решения текущей задачи.
+ */
+unsigned long int Solver::error()
+{
+	unsigned long int result = 0;
+
+	for (auto & square : data.squares)
+	{
+		unsigned long int current = 0;
+
+		for (auto &point: results.points)
+			if (belong(point, square))
+				++current;
+
+		if (current > 1)
+			result += current;
+	}
+
+	return result;
+}
+
+
+/*
  * Решает задачу покрытия квадратов точками простым алгоритмом.
  * Возвращает указатель на структуру с результатами решения задачи.
  */
-TaskResults* Solver::cover_simple()
+TaskResults& Solver::cover_simple()
 {
 	Point *req;
 
 	clock_t start, stop;
 	bool intersected = false;
 
+	for (auto & square : data.squares)
+		square.covered = false;
+
 	results.steps = 0;
+	results.points.clear();
 
 	start = clock();
 
@@ -103,10 +130,11 @@ TaskResults* Solver::cover_simple()
 			results.points.push_back(*middle(i, i));
 
 	stop = clock();
-
 	results.time = (double)(stop - start) / CLOCKS_PER_SEC;
 
-	return &results;
+	results.error = 0;//error();
+
+	return results;
 }
 
 
@@ -114,7 +142,7 @@ TaskResults* Solver::cover_simple()
  * Решает задачу покрытия квадратов точками жадным алгоритмом.
  * Возвращает указатель на структуру с результатами решения задачи.
  */
-TaskResults* Solver::cover_greedy()
+TaskResults& Solver::cover_greedy()
 {
 	Segment x_intersection{}, y_intersection{}, x_current{}, y_current{};
 	Point point{};
@@ -122,7 +150,11 @@ TaskResults* Solver::cover_greedy()
 	clock_t start, stop;
 	int x_flag, y_flag;
 
+	for (auto & square : data.squares)
+		square.covered = false;
+
 	results.steps = 0;
+	results.points.clear();
 
 	start = clock();
 
@@ -170,31 +202,9 @@ TaskResults* Solver::cover_greedy()
 		}
 
 	stop = clock();
-
 	results.time = (double)(stop - start) / CLOCKS_PER_SEC;
 
-	return &results;
-}
+	results.error = 0;//error();
 
-
-/*
- * Вычисляет суммарную ошибку для решения текущей задачи.
- */
-unsigned long int Solver::error()
-{
-	unsigned long int result = 0;
-
-	for (auto & square : data.squares)
-	{
-		unsigned long int current = 0;
-
-		for (auto &point: results.points)
-			if (belong(point, square))
-				++current;
-
-		if (current > 1)
-			result += current;
-	}
-
-	return result;
+	return results;
 }
