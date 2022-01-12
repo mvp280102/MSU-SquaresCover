@@ -198,5 +198,3 @@ unsigned long int Solver::error()
 
 	return result;
 }
-
-// для каждого: размерность шаги время время/шаги

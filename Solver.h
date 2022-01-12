@@ -48,7 +48,7 @@ class Solver
 {
 	private:
 
-	TaskData data{};                    // Набор данных для задачи.
+	TaskData data{};                    // Данные для задачи.
 	TaskResults results{};              // Результаты решения задачи.
 
 	/*
