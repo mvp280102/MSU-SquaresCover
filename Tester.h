@@ -4,16 +4,27 @@
 
 #include <iostream>
 #include <fstream>
+#include <iomanip>
 using namespace std;
 
 
-// Набор общих данных для тестов.
+// Общие данные для тестов.
 struct TestData
 {
-	unsigned int tests_amount;          // Количество тестов.
-	unsigned int range;                 // Размер части плоскости.
-	unsigned int squares_amount;        // Количество квадратов.
-	unsigned int side_length;           // Длина стороны одного квадрата.
+	unsigned int tests_amount;                          // Количество тестов.
+	unsigned int range;                                 // Размер части плоскости.
+	unsigned int squares_amount;                        // Количество квадратов.
+	unsigned int side_length;                           // Длина стороны одного квадрата.
+};
+
+// Результаты тестов.
+struct TestResults
+{
+	double average_time = 0;                            // Среднее время, затраченное на тест.
+	unsigned long int average_steps = 0;                // Среднее количество шагов в тесте.
+	unsigned long int average_error = 0;                // Средняя ошибка для теста.
+	unsigned long int average_points = 0;               // Среднее количество точек покрытия в тесте.
+	vector<TaskResults> results;                        // Набор результатов тестов.
 };
 
 
@@ -22,14 +33,20 @@ class Tester
 {
 	private:
 
-	Solver *solver = nullptr;               // Экземпляр класса, решающего задачу.
-	TestData data;                          // Набор общих данных для тестов.
+	Solver *solver = nullptr;                           // Экземпляр класса, решающего задачу.
+	TestData data{};                                    // Общие данные для тестов.
+	TestResults results_simple{};                       // Результаты тестов простого алгоритма.
+	TestResults results_greedy{};                       // Результаты тестов жадного алгоритма.
 
-	double average_time = 0;                // Среднее время, затраченное на тест.
-	unsigned long int average_points = 0;   // Среднее количество точек покрытия в тесте.
-	unsigned long int average_steps = 0;    // Среднее количество шагов в тесте.
+	/*
+	 * TODO: Написать комментарий.
+	 */
+	static void save_results(TestResults &test_results, TaskResults &task_results);
 
-	vector<TaskResults> results;            // Набор результатов решения тестовых задач.
+	/*
+	 * TODO: Написать комментарий.
+	 */
+	void conclude_average(TestResults &test_results) const;
 
 
 	public:
@@ -41,7 +58,8 @@ class Tester
 
 	/*
 	 * Запускает решение задачи о покрытии квадратов точками
-	 * заданное число раз на случайно сгенерированных тестовых данных.
+	 * простым и жадным алгоритмами заданное число раз на
+	 * случайно сгенерированных тестовых данных.
 	 */
 	void run_tests();
 
@@ -54,4 +72,9 @@ class Tester
 	 * TODO: Написать комментарий.
 	 */
 	void write_details(const char *filename);
+
+	/*
+	 * TODO: Написать комментарий.
+	 */
+	void create_diagram(const char *filename);
 };
