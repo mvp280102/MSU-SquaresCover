@@ -2,16 +2,6 @@
 
 
 /*
- * Если точка принадлежит квадрату, возвращает true, иначе - false.
- */
-bool Solver::belong(Point point, Square square)
-{
-	return ((point.x > square.corner.x) && (point.x < square.corner.x + data.side_length)) &&
-			((point.y > square.corner.y) && (point.y < square.corner.y + data.side_length));
-}
-
-
-/*
  * Если квадраты пересекаются, возвращает указатель на
  * координаты середины их пересечения, иначе - nullptr.
  */
@@ -61,16 +51,29 @@ int Solver::intersection(const Segment &first, const Segment &second)
 
 
 /*
- * Решает задачу покрытия квадратов точками простым алгоритмом.
- * После выполнения функции points содержит координаты точек покрытия.
- * Возвращает количество шагов, за которое была решена задача.
+ * Если точка принадлежит квадрату, возвращает true, иначе - false.
  */
-unsigned long int Solver::cover_simple(vector<Point> &points)
+bool Solver::belong(const Point &point, const Square &square)
+{
+	return ((point.x > square.corner.x) && (point.x < square.corner.x + data.side_length)) &&
+			((point.y > square.corner.y) && (point.y < square.corner.y + data.side_length));
+}
+
+
+/*
+ * Решает задачу покрытия квадратов точками простым алгоритмом.
+ * Возвращает указатель на структуру с результатами решения задачи.
+ */
+TaskResults* Solver::cover_simple()
 {
 	Point *req;
 
-	unsigned long int steps = 0;
+	clock_t start, stop;
 	bool intersected = false;
+
+	results.steps = 0;
+
+	start = clock();
 
 	for (int i = 0; i < data.squares.size(); ++i)
 	{
@@ -84,10 +87,10 @@ unsigned long int Solver::cover_simple(vector<Point> &points)
 		{
 			req = middle(i, j);
 
-			if (++steps && !data.squares.at(i).covered && !data.squares.at(i).covered && (req != nullptr))
+			if (++results.steps && !data.squares.at(i).covered && !data.squares.at(i).covered && (req != nullptr))
 			{
 				data.squares.at(i).covered = data.squares.at(j).covered = true;
-				points.push_back(*req);
+				results.points.push_back(*req);
 
 				intersected = true;
 				break;
@@ -96,25 +99,32 @@ unsigned long int Solver::cover_simple(vector<Point> &points)
 	}
 
 	for (int i = 0; i < data.squares.size(); ++i)
-		if (!data.squares.at(i).covered)
-			points.push_back(*middle(i, i));
+		if (++results.steps && !data.squares.at(i).covered)
+			results.points.push_back(*middle(i, i));
 
-	return steps;
+	stop = clock();
+
+	results.time = (double)(stop - start) / CLOCKS_PER_SEC;
+
+	return &results;
 }
 
 
 /*
  * Решает задачу покрытия квадратов точками жадным алгоритмом.
- * После выполнения функции points содержит координаты точек покрытия.
- * Возвращает количество шагов, за которое была решена задача.
+ * Возвращает указатель на структуру с результатами решения задачи.
  */
-unsigned long int Solver::cover_greedy(vector<Point> &points)
+TaskResults* Solver::cover_greedy()
 {
 	Segment x_intersection{}, y_intersection{}, x_current{}, y_current{};
 	Point point{};
 
-	unsigned long int steps = 0;
+	clock_t start, stop;
 	int x_flag, y_flag;
+
+	results.steps = 0;
+
+	start = clock();
 
 	for (int i = 0; i < data.squares.size(); ++i)
 		if (!data.squares.at(i).covered)
@@ -126,7 +136,7 @@ unsigned long int Solver::cover_greedy(vector<Point> &points)
 			y_intersection.end = y_intersection.begin + data.side_length;
 
 			for (int j = i + 1; j < data.squares.size(); ++j)
-				if (++steps && !data.squares.at(j).covered)
+				if (++results.steps && !data.squares.at(j).covered)
 				{
 					x_current.begin = data.squares.at(j).corner.x;
 					x_current.end = x_current.begin + data.side_length;
@@ -156,8 +166,37 @@ unsigned long int Solver::cover_greedy(vector<Point> &points)
 			point.x = (x_intersection.begin + x_intersection.end) / 2.0;
 			point.y = (y_intersection.begin + y_intersection.end) / 2.0;
 
-			points.push_back(point);
+			results.points.push_back(point);
 		}
 
-	return steps;
+	stop = clock();
+
+	results.time = (double)(stop - start) / CLOCKS_PER_SEC;
+
+	return &results;
 }
+
+
+/*
+ * Вычисляет суммарную ошибку для решения текущей задачи.
+ */
+unsigned long int Solver::error()
+{
+	unsigned long int result = 0;
+
+	for (auto & square : data.squares)
+	{
+		unsigned long int current = 0;
+
+		for (auto &point: results.points)
+			if (belong(point, square))
+				++current;
+
+		if (current > 1)
+			result += current;
+	}
+
+	return result;
+}
+
+// для каждого: размерность шаги время время/шаги
