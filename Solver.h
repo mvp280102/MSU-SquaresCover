@@ -39,7 +39,8 @@ struct TaskData
 // Результаты решения задачи.
 struct TaskResults
 {
-	double time;                        // Время, затраченное на решение.
+	double total_time;                  // Время, затраченное на решение.
+	double step_time;                   // Среднее время, затраченное на один шаг решения.
 	unsigned long int steps;            // Количество шагов в решении.
 	unsigned long int error;            // Ошибка решения.
 	vector<Point> points;               // Точки покрытия.

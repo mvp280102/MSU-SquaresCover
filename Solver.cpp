@@ -130,8 +130,9 @@ TaskResults& Solver::cover_simple()
 			results.points.push_back(*middle(i, i));
 
 	stop = clock();
-	results.time = (double)(stop - start) / CLOCKS_PER_SEC;
 
+	results.total_time = (double)(stop - start) / CLOCKS_PER_SEC;
+	results.step_time = results.total_time / (double)results.steps;
 	results.error = data.error_conclude ? error() : 0;
 
 	return results;
@@ -202,8 +203,9 @@ TaskResults& Solver::cover_greedy()
 		}
 
 	stop = clock();
-	results.time = (double)(stop - start) / CLOCKS_PER_SEC;
 
+	results.total_time = (double)(stop - start) / CLOCKS_PER_SEC;
+	results.step_time = results.total_time / (double)results.steps;
 	results.error = data.error_conclude ? error() : 0;
 
 	return results;
