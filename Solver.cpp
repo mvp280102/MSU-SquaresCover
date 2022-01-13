@@ -76,7 +76,7 @@ unsigned long int Solver::error()
 				++current;
 
 		if (current > 1)
-			result += current;
+			result += (current - 1);
 	}
 
 	return result;
@@ -132,7 +132,7 @@ TaskResults& Solver::cover_simple()
 	stop = clock();
 	results.time = (double)(stop - start) / CLOCKS_PER_SEC;
 
-	results.error = 0;//error();
+	results.error = data.error_conclude ? error() : 0;
 
 	return results;
 }
@@ -204,7 +204,7 @@ TaskResults& Solver::cover_greedy()
 	stop = clock();
 	results.time = (double)(stop - start) / CLOCKS_PER_SEC;
 
-	results.error = 0;//error();
+	results.error = data.error_conclude ? error() : 0;
 
 	return results;
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <iostream>
+//#include <iostream>
 
 #include <ctime>
 #include <vector>
@@ -31,6 +31,7 @@ struct Segment
 // Данные для задачи.
 struct TaskData
 {
+	bool error_conclude = false;        // Флаг необходимости вычисления ошибки.
 	unsigned int side_length;           // Длина стороны одного квадрата.
 	vector<Square> squares;             // Квадраты.
 };
