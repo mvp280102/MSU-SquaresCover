@@ -47,12 +47,21 @@ class Tester
 	TestResults results_greedy{};                       // Результаты тестов жадного алгоритма.
 
 	/*
-	 * TODO: Написать комментарий.
+	 * ОПИСАНИЕ ФУНКЦИИ:
+	 * Добавляет результаты решения текущей задачи к результатам тестов.
+	 *
+	 * ПАРАМЕТРЫ:
+	 * TestResults &test_results - результаты тестов
+	 * TaskResults &task_results - результаты решения текущей задачи
 	 */
 	static void save_results(TestResults &test_results, TaskResults &task_results);
 
 	/*
-	 * TODO: Написать комментарий.
+	 * ОПИСАНИЕ ФУНКЦИИ:
+	 * Вычисляет средние значения для результатов тестов.
+	 *
+	 * ПАРАМЕТРЫ:
+	 * TestResults &test_results - результаты тестов
 	 */
 	void conclude_average(TestResults &test_results) const;
 

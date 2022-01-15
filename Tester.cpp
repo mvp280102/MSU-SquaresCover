@@ -2,7 +2,7 @@
 
 
 /*
- * TODO: Написать комментарий.
+ * Добавляет результаты решения текущей задачи к результатам тестов.
  */
 void Tester::save_results(TestResults &test_results, TaskResults &task_results)
 {
@@ -16,7 +16,7 @@ void Tester::save_results(TestResults &test_results, TaskResults &task_results)
 
 
 /*
- * TODO: Написать комментарий.
+ * Вычисляет средние значения для результатов тестов.
  */
 void Tester::conclude_average(TestResults &test_results) const
 {
