@@ -2,6 +2,16 @@
 
 
 /*
+ * Если точка принадлежит квадрату, возвращает true, иначе - false.
+ */
+bool Solver::belong(const Point &point, const Square &square)
+{
+	return ((point.x > square.corner.x) && (point.x < square.corner.x + data.side_length)) &&
+			((point.y > square.corner.y) && (point.y < square.corner.y + data.side_length));
+}
+
+
+/*
  * Если квадраты пересекаются, возвращает указатель на
  * координаты середины их пересечения, иначе - nullptr.
  */
@@ -47,16 +57,6 @@ int Solver::intersection(const Segment &first, const Segment &second)
 		return 2;
 	else
 		return 0;
-}
-
-
-/*
- * Если точка принадлежит квадрату, возвращает true, иначе - false.
- */
-bool Solver::belong(const Point &point, const Square &square)
-{
-	return ((point.x > square.corner.x) && (point.x < square.corner.x + data.side_length)) &&
-			((point.y > square.corner.y) && (point.y < square.corner.y + data.side_length));
 }
 
 

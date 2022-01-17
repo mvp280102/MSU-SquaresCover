@@ -55,6 +55,17 @@ class Solver
 	TaskData data{};                    // Данные для задачи.
 	TaskResults results{};              // Результаты решения задачи.
 
+
+	/*
+	 * ОПИСАНИЕ ФУНКЦИИ:
+	 * Если точка принадлежит квадрату, возвращает true, иначе - false.
+	 *
+	 * ПАРАМЕТРЫ:
+	 * Point &point - точка
+	 * Square &square - квадрат
+	 */
+	bool belong(const Point &point, const Square &square);
+
 	/*
 	 * ОПИСАНИЕ ФУНКЦИИ:
 	 * Если квадраты пересекаются, возвращает указатель на
@@ -79,16 +90,6 @@ class Solver
 	 * const Segment &second - второй отрезок
 	 */
 	static int intersection(const Segment &first, const Segment &second);
-
-	/*
-	 * ОПИСАНИЕ ФУНКЦИИ:
-	 * Если точка принадлежит квадрату, возвращает true, иначе - false.
-	 *
-	 * ПАРАМЕТРЫ:
-	 * Point &point - точка
-	 * Square &square - квадрат
-	 */
-	bool belong(const Point &point, const Square &square);
 
 	/*
 	 * ОПИСАНИЕ ФУНКЦИИ:
