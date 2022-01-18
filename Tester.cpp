@@ -4,77 +4,83 @@
 /*
  * Добавляет результаты решения текущей задачи к результатам тестов.
  */
-void Tester::save_results(TestResults &test_results, TaskResults &task_results)
+void Tester::save_results(TestResultsExtended &test_results, TaskResults &task_results)
 {
 	test_results.average_total_time += task_results.total_time;
 	test_results.average_step_time += task_results.step_time;
 	test_results.average_points += task_results.points.size();
 	test_results.average_steps += task_results.steps;
 	test_results.average_error += task_results.error;
-	test_results.results.push_back(task_results);
+	test_results.task_results.push_back(task_results);
 }
 
 
 /*
  * Вычисляет средние значения для результатов тестов.
  */
-void Tester::conclude_average(TestResults &test_results) const
+void Tester::conclude_average(TestResultsExtended &test_results) const
 {
-	test_results.average_total_time /= data.tests_amount;
-	test_results.average_step_time /= data.tests_amount;
-	test_results.average_steps /= data.tests_amount;
-	test_results.average_error /= data.tests_amount;
-	test_results.average_points /= data.tests_amount;
+	test_results.average_total_time /= test_data.tests_amount;
+	test_results.average_step_time /= test_data.tests_amount;
+	test_results.average_steps /= test_data.tests_amount;
+	test_results.average_error /= test_data.tests_amount;
+	test_results.average_points /= test_data.tests_amount;
 }
 
 
 /*
- * Запускает решение задачи о покрытии квадратов точками простым и
- * жадным алгоритмами на случайно сгенерированных тестовых данных.
+ * Запускает решение задачи простым и жадным алгоритмами на одинаковых
+ * случайно сгенерированных по текущему критерию тестовых данных.
  */
-void Tester::run_tests()
+void Tester::test_current_data(bool output)
 {
 	TaskResults res;
 	vector<Square> squares;
 
+	results.first.squares_amount = results.second.squares_amount = test_data.squares_amount;
+
 	srandom(static_cast<unsigned int>(time(nullptr)));
 
-	for (int i = 0; i < data.tests_amount; ++i)
+	for (int i = 0; i < test_data.tests_amount; ++i)
 	{
-		cout << "Running test " << i + 1 << ":\n";
+		if (output)
+			cout << "Running test " << i + 1 << ":\n";
 
-		squares.reserve(data.squares_amount);
+		squares.reserve(test_data.squares_amount);
 
-		for (int j = 0; j < data.squares_amount; ++j)
-			squares.push_back(Square{false, {static_cast<double>(random() % (data.range - data.side_length)), static_cast<double>(random() % (data.range - data.side_length))}});
+		for (int j = 0; j < test_data.squares_amount; ++j)
+			squares.push_back(Square{false, {static_cast<double>(random() % (test_data.area_range - test_data.side_length)), static_cast<double>(random() % (test_data.area_range - test_data.side_length))}});
 
-		solver = new Solver(TaskData{data.error_conclude, data.side_length, squares});
+		solver = new Solver(TaskData{test_data.error_conclude, test_data.side_length, squares});
 
-		cout << "Simple algorithm...\n";
+		if (output)
+			cout << "Simple algorithm...\n";
 
 		res = solver->cover_simple();
-		save_results(results_simple, res);
+		save_results(results.first, res);
 
-		cout << "Greedy algorithm...\n";
+		if (output)
+			cout << "Greedy algorithm...\n";
 
 		res = solver->cover_greedy();
-		save_results(results_greedy, res);
+		save_results(results.second, res);
 
-		cout << endl;
+		if (output)
+			cout << endl;
 
 		squares.clear();
 		delete solver;
 	}
 
-	conclude_average(results_simple);
-	conclude_average(results_greedy);
+	conclude_average(results.first);
+	conclude_average(results.second);
 }
 
 
 /*
  * TODO: Написать комментарий.
  */
-void Tester::show_results()
+void Tester::results_current_data()
 {
 	cout.setf(ios::left);
 
@@ -84,19 +90,19 @@ void Tester::show_results()
 
 	cout << "| "
 	     << setw(COMMON_LABEL_WIDTH) << "Tests amount: "
-	     << setw(CELL_DATA_WIDTH * 2) << data.tests_amount << "|\n";
+	     << setw(CELL_DATA_WIDTH * 2) << test_data.tests_amount << "|\n";
 
 	cout << "| "
 	     << setw(COMMON_LABEL_WIDTH) << "Range: "
-	     << setw(CELL_DATA_WIDTH * 2) << data.range << "|\n";
+	     << setw(CELL_DATA_WIDTH * 2) << test_data.area_range << "|\n";
 
 	cout << "| "
 	     << setw(COMMON_LABEL_WIDTH) << "Squares amount: "
-	     << setw(CELL_DATA_WIDTH * 2) << data.squares_amount << "|\n";
+	     << setw(CELL_DATA_WIDTH * 2) << test_data.squares_amount << "|\n";
 
 	cout << "| "
 	     << setw(COMMON_LABEL_WIDTH) << "Side length: "
-	     << setw(CELL_DATA_WIDTH * 2) << data.side_length << "|\n";
+	     << setw(CELL_DATA_WIDTH * 2) << test_data.side_length << "|\n";
 
 	cout << DIVIDER
 	     << "| "
@@ -105,35 +111,35 @@ void Tester::show_results()
 	     << setw(CELL_DATA_WIDTH) << "GREEDY"
 		 << "|\n";
 
-	for (int i = 0; i < data.tests_amount; ++i)
+	for (int i = 0; i < test_data.tests_amount; ++i)
 	{
 		cout << DIVIDER
 			 << "| Test " << setw(2) << right << i + 1 << ":  " << left;
 
 		cout << setw(CELL_TITLE_WIDTH) << "Total time:"
-		     << setw(CELL_DATA_WIDTH) << results_simple.results.at(i).total_time
-		     << setw(CELL_DATA_WIDTH) << results_greedy.results.at(i).total_time << "|\n";
+		     << setw(CELL_DATA_WIDTH) << results.first.task_results.at(i).total_time
+		     << setw(CELL_DATA_WIDTH) << results.second.task_results.at(i).total_time << "|\n";
 
 		cout << "|\t\t\t"
 		     << setw(CELL_TITLE_WIDTH) << "Time for step:"
-		     << setw(CELL_DATA_WIDTH) << results_simple.results.at(i).step_time
-		     << setw(CELL_DATA_WIDTH) << results_greedy.results.at(i).step_time << "|\n";
+		     << setw(CELL_DATA_WIDTH) << results.first.task_results.at(i).step_time
+		     << setw(CELL_DATA_WIDTH) << results.second.task_results.at(i).step_time << "|\n";
 
 		cout << "|\t\t\t"
 		     << setw(CELL_TITLE_WIDTH) << "Steps amount:"
-		     << setw(CELL_DATA_WIDTH) << results_simple.results.at(i).steps
-		     << setw(CELL_DATA_WIDTH) << results_greedy.results.at(i).steps << "|\n";
+		     << setw(CELL_DATA_WIDTH) << results.first.task_results.at(i).steps
+		     << setw(CELL_DATA_WIDTH) << results.second.task_results.at(i).steps << "|\n";
 
-		if (data.error_conclude)
+		if (test_data.error_conclude)
 			cout << "|\t\t\t"
 			     << setw(CELL_TITLE_WIDTH) << "Error:"
-			     << setw(CELL_DATA_WIDTH) << results_simple.results.at(i).error
-			     << setw(CELL_DATA_WIDTH) << results_greedy.results.at(i).error << "|\n";
+			     << setw(CELL_DATA_WIDTH) << results.first.task_results.at(i).error
+			     << setw(CELL_DATA_WIDTH) << results.second.task_results.at(i).error << "|\n";
 
 		cout << "|\t\t\t"
 		     << setw(CELL_TITLE_WIDTH) << "Points amount: "
-		     << setw(CELL_DATA_WIDTH) << results_simple.results.at(i).points.size()
-		     << setw(CELL_DATA_WIDTH) << results_greedy.results.at(i).points.size() << "|\n";
+		     << setw(CELL_DATA_WIDTH) << results.first.task_results.at(i).points.size()
+		     << setw(CELL_DATA_WIDTH) << results.second.task_results.at(i).points.size() << "|\n";
 	}
 
 	cout << DIVIDER
@@ -142,29 +148,29 @@ void Tester::show_results()
 
 	cout << "| "
 	     << setw(COMMON_LABEL_WIDTH) << "Average total time:"
-	     << setw(CELL_DATA_WIDTH) << results_simple.average_total_time
-	     << setw(CELL_DATA_WIDTH) << results_greedy.average_total_time << "|\n";
+	     << setw(CELL_DATA_WIDTH) << results.first.average_total_time
+	     << setw(CELL_DATA_WIDTH) << results.second.average_total_time << "|\n";
 
 	cout << "| "
 	     << setw(COMMON_LABEL_WIDTH) << "Average time for step:"
-	     << setw(CELL_DATA_WIDTH) << results_simple.average_step_time
-	     << setw(CELL_DATA_WIDTH) << results_greedy.average_step_time << "|\n";
+	     << setw(CELL_DATA_WIDTH) << results.first.average_step_time
+	     << setw(CELL_DATA_WIDTH) << results.second.average_step_time << "|\n";
 
 	cout << "| "
 	     << setw(COMMON_LABEL_WIDTH) << "Average steps amount:"
-	     << setw(CELL_DATA_WIDTH) << results_simple.average_steps
-	     << setw(CELL_DATA_WIDTH) << results_greedy.average_steps << "|\n";
+	     << setw(CELL_DATA_WIDTH) << results.first.average_steps
+	     << setw(CELL_DATA_WIDTH) << results.second.average_steps << "|\n";
 
-	if (data.error_conclude)
+	if (test_data.error_conclude)
 		cout << "| "
 		     << setw(COMMON_LABEL_WIDTH) << "Average error:"
-		     << setw(CELL_DATA_WIDTH) << results_simple.average_error
-		     << setw(CELL_DATA_WIDTH) << results_greedy.average_error << "|\n";
+		     << setw(CELL_DATA_WIDTH) << results.first.average_error
+		     << setw(CELL_DATA_WIDTH) << results.second.average_error << "|\n";
 
 	cout << "| "
 	     << setw(COMMON_LABEL_WIDTH) << "Average points amount:"
-	     << setw(CELL_DATA_WIDTH) << results_simple.average_points
-	     << setw(CELL_DATA_WIDTH) << results_greedy.average_points << "|\n";
+	     << setw(CELL_DATA_WIDTH) << results.first.average_points
+	     << setw(CELL_DATA_WIDTH) << results.second.average_points << "|\n";
 
 	cout << DIVIDER;
 }
@@ -173,9 +179,9 @@ void Tester::show_results()
 /*
  * TODO: Написать комментарий.
  */
-/*
-void Tester::write_details(const char *filename)
+void Tester::details_current_data(const char *filename)
 {
+	/*
 	ofstream out;
 
 	out.open(filename);
@@ -188,33 +194,33 @@ void Tester::write_details(const char *filename)
 		exit(1);
 	}
 
-	out << data.tests_amount << " tests:\n"
+	out << test_data.tests_amount << " tests:\n"
 		<< endl
-		<< "Common data:\n"
-		<< "Range: " << data.range << ".\n"
-		<< "Squares amount: " << data.squares_amount << ".\n"
-		<< "Side length: " << data.side_length << ".\n"
+		<< "Common test_data:\n"
+		<< "Range: " << test_data.area_range << ".\n"
+		<< "Squares amount: " << test_data.squares_amount << ".\n"
+		<< "Side length: " << test_data.side_length << ".\n"
 		<< endl << endl;
 
-	for (int i = 0; i < results.size(); ++i)
+	for (int i = 0; i < task_results.size(); ++i)
 	{
 		out << "Test " << i + 1 << ":\n" << endl;
 
 		out << "Coordinates of squares:\n";
 
-		for (auto & square : results.at(i).squares)
+		for (auto & square : task_results.at(i).squares)
 			out << "(" << square.corner.x << "; " << square.corner.y << ")\n";
 
 		out << endl
 			<< "Coordinates of points:\n";
 
-		for (auto & point : results.at(i).points)
+		for (auto & point : task_results.at(i).points)
 			out << "(" << point.x << "; " << point.y << ")\n";
 
 		out << endl
-			<< "Points amount: " << results.at(i).points.size() << ".\n"
-			<< "Steps amount: " << results.at(i).steps << ".\n"
-		    << "Time: " << results.at(i).total_time << " s.\n"
+			<< "Points amount: " << task_results.at(i).points.size() << ".\n"
+			<< "Steps amount: " << task_results.at(i).steps << ".\n"
+		    << "Time: " << task_results.at(i).total_time << " s.\n"
 		    << endl;
 	}
 
@@ -225,14 +231,66 @@ void Tester::write_details(const char *filename)
 		<< endl;
 
 	out.close();
+	*/
 }
-*/
 
 
 /*
  * TODO: Написать комментарий.
  */
-void Tester::create_csv(const char *filename)
+void Tester::test_range_data(unsigned int high_squares_amount, unsigned int step)
 {
+	while (test_data.squares_amount <= high_squares_amount)
+	{
+		cout << "Testing algorithms on " << test_data.tests_amount << " tests with " << test_data.squares_amount << " squares...\n";
 
+		test_current_data();
+
+		results_data.emplace_back(results);
+
+		cout << "Simple algorithm average total time: " << results.first.average_total_time << ".\n"
+			 << "Greedy algorithm average total time: " << results.second.average_total_time << ".\n"
+			 << endl;
+
+		test_data.squares_amount += step;
+	}
+}
+
+
+/*
+ * TODO: Написать комментарий.
+ */
+void Tester::csv_range_data(const char *filename) const
+{
+	ofstream out;
+
+	out.open(filename);
+
+	if (!out.fail())
+	{
+		out << "Range, Side length, Squares amount, "
+			<< "Total time (SIMPLE), Total time (GREEDY), "
+			<< "Steps amount (SIMPLE), Steps amount (GREEDY), "
+			<< "Time for step (SIMPLE), Time for step (GREEDY)" << endl;
+
+		for (const auto & item : results_data)
+		{
+			out << test_data.area_range << ", "
+				<< test_data.side_length << ", "
+			    << item.first.squares_amount << ", "
+			    << item.first.average_total_time << ", "
+			    << item.second.average_total_time << ", "
+			    << item.first.average_steps << ", "
+			    << item.second.average_steps << ", "
+			    << item.first.average_step_time << ", "
+			    << item.second.average_step_time << endl;
+		}
+	}
+	else
+	{
+		cout << "Output file opening error!\n"
+			 << "Aborting application!\n";
+
+		exit(1);
+	}
 }
