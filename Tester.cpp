@@ -44,7 +44,7 @@ void Tester::test_current_data(bool output)
 	for (int i = 0; i < test_data.tests_amount; ++i)
 	{
 		if (output)
-			cout << "Running test " << i + 1 << ":\n";
+			cout << "Running algorithms on test " << i + 1 << ":\n";
 
 		squares.reserve(test_data.squares_amount);
 
@@ -78,7 +78,8 @@ void Tester::test_current_data(bool output)
 
 
 /*
- * TODO: Написать комментарий.
+ * Выводит на экран сводную таблицу по всем тестам для обоих
+ * алгоритмов, а также средние значения по полученным данным.
  */
 void Tester::results_current_data()
 {
@@ -86,7 +87,7 @@ void Tester::results_current_data()
 
 	cout << DIVIDER
 	     << "| "
-		 << setw(COMMON_TITLE_WIDTH) << "COMMON DATA" << "|\n";
+		 << setw(COMMON_TITLE_WIDTH) << "TEST DATA" << "|\n";
 
 	cout << "| "
 	     << setw(COMMON_LABEL_WIDTH) << "Tests amount: "
@@ -105,8 +106,13 @@ void Tester::results_current_data()
 	     << setw(CELL_DATA_WIDTH * 2) << test_data.side_length << "|\n";
 
 	cout << DIVIDER
+		 << endl;
+
+	cout << DIVIDER
+		 << "| "
+		 << setw(COMMON_TITLE_WIDTH) << "TEST RESULTS" << "|\n"
 	     << "| "
-	     << setw(COMMON_LABEL_WIDTH) << "Algorithm type:"
+	     << setw(COMMON_LABEL_WIDTH) << "ALGORITHM TYPE:"
 	     << setw(CELL_DATA_WIDTH) << "SIMPLE"
 	     << setw(CELL_DATA_WIDTH) << "GREEDY"
 		 << "|\n";
@@ -143,10 +149,19 @@ void Tester::results_current_data()
 	}
 
 	cout << DIVIDER
-	     << "| "
-	     << setw(COMMON_TITLE_WIDTH) << "AVERAGE VALUES" << "|\n";
+		 << endl;
 
-	cout << "| "
+	cout << DIVIDER
+	     << "| "
+	     << setw(COMMON_TITLE_WIDTH) << "AVERAGE VALUES" << "|\n"
+		 << "| "
+		 << setw(COMMON_LABEL_WIDTH) << "ALGORITHM TYPE:"
+		 << setw(CELL_DATA_WIDTH) << "SIMPLE"
+		 << setw(CELL_DATA_WIDTH) << "GREEDY"
+		 << "|\n";
+
+	cout << DIVIDER
+	     << "| "
 	     << setw(COMMON_LABEL_WIDTH) << "Average total time:"
 	     << setw(CELL_DATA_WIDTH) << results.first.average_total_time
 	     << setw(CELL_DATA_WIDTH) << results.second.average_total_time << "|\n";
@@ -172,7 +187,8 @@ void Tester::results_current_data()
 	     << setw(CELL_DATA_WIDTH) << results.first.average_points
 	     << setw(CELL_DATA_WIDTH) << results.second.average_points << "|\n";
 
-	cout << DIVIDER;
+	cout << DIVIDER
+		 << endl;
 }
 
 
@@ -238,19 +254,16 @@ void Tester::details_current_data(const char *filename)
 /*
  * TODO: Написать комментарий.
  */
-void Tester::test_range_data(unsigned int high_squares_amount, unsigned int step)
+void Tester::test_range_data(unsigned int high_squares_amount, unsigned int step, bool output)
 {
 	while (test_data.squares_amount <= high_squares_amount)
 	{
-		cout << "Testing algorithms on " << test_data.tests_amount << " tests with " << test_data.squares_amount << " squares...\n";
+		if (output)
+			cout << "Running algorithms on " << test_data.tests_amount << " tests with " << test_data.squares_amount << " squares...\n"
+				 << endl;
 
-		test_current_data();
-
+		test_current_data(true);
 		results_data.emplace_back(results);
-
-		cout << "Simple algorithm average total time: " << results.first.average_total_time << ".\n"
-			 << "Greedy algorithm average total time: " << results.second.average_total_time << ".\n"
-			 << endl;
 
 		test_data.squares_amount += step;
 	}
@@ -258,13 +271,12 @@ void Tester::test_range_data(unsigned int high_squares_amount, unsigned int step
 
 
 /*
- * TODO: Написать комментарий.
+ * Выводит в csv-файл таблицу со средними значениями по тестам алгоритмов,
+ * запущенных в определенном диапазоне критерия тестовых данных.
  */
 void Tester::csv_range_data(const char *filename) const
 {
-	ofstream out;
-
-	out.open(filename);
+	ofstream out(filename);
 
 	if (!out.fail())
 	{

@@ -84,11 +84,16 @@ class Tester
 	 * ОПИСАНИЕ ФУНКЦИИ:
 	 * Запускает решение задачи простым и жадным алгоритмами на одинаковых
 	 * случайно сгенерированных по текущему критерию тестовых данных.
+	 *
+	 * ПАРАМЕТРЫ:
+	 * bool output - флаг вывода описания процесса выполнения
 	 */
 	void test_current_data(bool output = false);
 
 	/*
-	 * TODO: Написать комментарий.
+	 * ОПИСАНИЕ ФУНКЦИИ:
+	 * Выводит на экран сводную таблицу по всем тестам для обоих
+	 * алгоритмов, а также средние значения по полученным данным.
 	 */
 	void results_current_data();
 
@@ -100,10 +105,15 @@ class Tester
 	/*
 	 * TODO: Написать комментарий.
 	 */
-	void test_range_data(unsigned int high_squares_amount, unsigned int step);
+	void test_range_data(unsigned int high_squares_amount, unsigned int step, bool output = false);
 
 	/*
-	 * TODO: Написать комментарий.
+	 * ОПИСАНИЕ ФУНКЦИИ:
+	 * Выводит в csv-файл таблицу со средними значениями по тестам алгоритмов,
+	 * запущенных в определенном диапазоне критерия тестовых данных.
+	 *
+	 * ПАРАМЕТРЫ:
+	 * const char *filename - имя файла для вывода
 	 */
 	void csv_range_data(const char *filename) const;
 };
