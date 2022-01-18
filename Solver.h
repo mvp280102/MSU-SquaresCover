@@ -64,7 +64,7 @@ class Solver
 	 * Point &point - точка
 	 * Square &square - квадрат
 	 */
-	bool belong(const Point &point, const Square &square);
+	[[nodiscard]] bool belong(const Point &point, const Square &square) const;
 
 	/*
 	 * ОПИСАНИЕ ФУНКЦИИ:

@@ -4,7 +4,7 @@
 /*
  * Если точка принадлежит квадрату, возвращает true, иначе - false.
  */
-bool Solver::belong(const Point &point, const Square &square)
+bool Solver::belong(const Point &point, const Square &square) const
 {
 	return ((point.x > square.corner.x) && (point.x < square.corner.x + data.side_length)) &&
 			((point.y > square.corner.y) && (point.y < square.corner.y + data.side_length));
