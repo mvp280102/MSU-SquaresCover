@@ -29,6 +29,26 @@ void Tester::conclude_average(TestResultsExtended &test_results) const
 
 
 /*
+ * Теоретическая оценка вычислительной сложности простого алгоритма - O(N).
+ * Возвращает значение указанной функции теоретической оценки на данном количестве квадратов.
+ */
+inline double Tester::complexity_grade_simple() const
+{
+	return (double)(test_data.squares_amount);
+}
+
+
+/*
+ * Теоретическая оценка вычислительной сложности жадного алгоритма - O(N*log(N)).
+ * Возвращает значение указанной функции теоретической оценки на данном количестве квадратов.
+ */
+inline double Tester::complexity_grade_greedy() const
+{
+	return (double)(test_data.squares_amount * log(test_data.squares_amount));
+}
+
+
+/*
  * Запускает решение задачи простым и жадным алгоритмами на одинаковых
  * случайно сгенерированных по текущему критерию тестовых данных.
  */
@@ -283,19 +303,24 @@ void Tester::csv_range_data(const char *filename) const
 		out << "Range, Side length, Squares amount, "
 			<< "Total time (SIMPLE), Total time (GREEDY), "
 			<< "Steps amount (SIMPLE), Steps amount (GREEDY), "
-			<< "Time for step (SIMPLE), Time for step (GREEDY)" << endl;
+			<< "Time for step (SIMPLE), Time for step (GREEDY), "
+			<< "Complexity grade (SIMPLE), Complexity grade (GREEDY)"
+			<< endl;
 
 		for (const auto & item : results_data)
 		{
-			out << test_data.area_range << ", "
-				<< test_data.side_length << ", "
-			    << item.first.squares_amount << ", "
-			    << item.first.average_total_time << ", "
-			    << item.second.average_total_time << ", "
-			    << item.first.average_steps << ", "
-			    << item.second.average_steps << ", "
-			    << item.first.average_step_time << ", "
-			    << item.second.average_step_time << endl;
+			out << test_data.area_range << ","
+				<< test_data.side_length << ","
+			    << item.first.squares_amount << ","
+			    << item.first.average_total_time << ","
+			    << item.second.average_total_time << ","
+			    << item.first.average_steps << ","
+			    << item.second.average_steps << ","
+			    << item.first.average_step_time << ","
+			    << item.second.average_step_time << ","
+				<< item.first.average_total_time / complexity_grade_simple() << ","
+				<< item.second.average_total_time / complexity_grade_greedy()
+				<< endl;
 		}
 	}
 	else

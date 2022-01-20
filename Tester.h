@@ -11,6 +11,7 @@
 #include <iostream>
 #include <fstream>
 #include <iomanip>
+#include <cmath>
 using namespace std;
 
 
@@ -71,6 +72,20 @@ class Tester
 	 * TestResultsExtended &test_results - результаты тестов
 	 */
 	void conclude_average(TestResultsExtended &test_results) const;
+
+	/*
+	 * ОПИСАНИЕ ФУНКЦИИ:
+	 * Теоретическая оценка вычислительной сложности простого алгоритма - O(N).
+	 * Возвращает значение указанной функции теоретической оценки на данном количестве квадратов.
+	 */
+	[[nodiscard]] inline double complexity_grade_simple() const;
+
+	/*
+	 * ОПИСАНИЕ ФУНКЦИИ:
+	 * Теоретическая оценка вычислительной сложности жадного алгоритма - O(N*log(N)).
+	 * Возвращает значение указанной функции теоретической оценки на данном количестве квадратов.
+	 */
+	[[nodiscard]] inline double complexity_grade_greedy() const;
 
 
 	public:
