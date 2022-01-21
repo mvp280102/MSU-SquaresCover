@@ -61,22 +61,27 @@ int Solver::intersection(const Segment &first, const Segment &second)
 
 
 /*
- * Вычисляет суммарную ошибку для решения текущей задачи.
+ * Вычисляет ошибку для решения текущей задачи.
  */
 unsigned long int Solver::error()
 {
 	unsigned long int result = 0;
 
-	for (auto & square : data.squares)
+	for (auto &square : data.squares)
 	{
-		unsigned long int current = 0;
+		bool flag = false;
 
-		for (auto &point: results.points)
+		for (auto &point : results.points)
 			if (belong(point, square))
-				++current;
+			{
+				flag = !flag;
 
-		if (current > 1)
-			result += (current - 1);
+				if (!flag)
+				{
+					++result;
+					break;
+				}
+			}
 	}
 
 	return result;
