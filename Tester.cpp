@@ -32,19 +32,19 @@ void Tester::conclude_average(TestResultsExtended &test_results) const
  * Теоретическая оценка вычислительной сложности простого алгоритма - O(N).
  * Возвращает значение указанной функции теоретической оценки на данном количестве квадратов.
  */
-inline double Tester::complexity_grade_simple() const
+inline double Tester::complexity_grade_simple(unsigned int squares_amount)
 {
-	return (double)(test_data.squares_amount);
+	return (double)(squares_amount);
 }
 
 
 /*
- * Теоретическая оценка вычислительной сложности жадного алгоритма - O(N*log(N)).
+ * Теоретическая оценка вычислительной сложности жадного алгоритма - O(N*log2(N)).
  * Возвращает значение указанной функции теоретической оценки на данном количестве квадратов.
  */
-inline double Tester::complexity_grade_greedy() const
+inline double Tester::complexity_grade_greedy(unsigned int squares_amount)
 {
-	return (double)(test_data.squares_amount * log(test_data.squares_amount));
+	return (double)squares_amount * log2((double)squares_amount);
 }
 
 
@@ -318,8 +318,8 @@ void Tester::csv_range_data(const char *filename) const
 			    << item.second.average_steps << ","
 			    << item.first.average_step_time << ","
 			    << item.second.average_step_time << ","
-				<< item.first.average_total_time / complexity_grade_simple() << ","
-				<< item.second.average_total_time / complexity_grade_greedy()
+				<< item.first.average_total_time / complexity_grade_simple(item.first.squares_amount) << ","
+				<< item.second.average_total_time / complexity_grade_greedy(item.second.squares_amount)
 				<< endl;
 		}
 	}

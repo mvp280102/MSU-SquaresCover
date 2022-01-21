@@ -77,15 +77,21 @@ class Tester
 	 * ОПИСАНИЕ ФУНКЦИИ:
 	 * Теоретическая оценка вычислительной сложности простого алгоритма - O(N).
 	 * Возвращает значение указанной функции теоретической оценки на данном количестве квадратов.
+	 *
+	 * ПАРАМЕТРЫ:
+	 * unsigned int squares_amount - количество квадратов
 	 */
-	[[nodiscard]] inline double complexity_grade_simple() const;
+	static inline double complexity_grade_simple(unsigned int squares_amount) ;
 
 	/*
 	 * ОПИСАНИЕ ФУНКЦИИ:
-	 * Теоретическая оценка вычислительной сложности жадного алгоритма - O(N*log(N)).
+	 * Теоретическая оценка вычислительной сложности жадного алгоритма - O(N*log2(N)).
 	 * Возвращает значение указанной функции теоретической оценки на данном количестве квадратов.
+	 *
+	 * ПАРАМЕТРЫ:
+	 * unsigned int squares_amount - количество квадратов
 	 */
-	[[nodiscard]] inline double complexity_grade_greedy() const;
+	static inline double complexity_grade_greedy(unsigned int squares_amount) ;
 
 
 	public:
