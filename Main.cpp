@@ -1,14 +1,55 @@
-#include "Interface.h"
+#define CURRENT
+//#define RANGE
+//#define MANUAL
+
+#ifdef CURRENT
 #include "Tester.h"
+#endif
+
+#ifdef RANGE
+#include "Tester.h"
+#endif
+
+#ifdef MANUAL
+#include "Interface.h"
+#endif
 
 int main()
 {
-	Tester tester(TestData{3, 15, 5, 5});
-	//Tester tester(TestData{10, 100, 1000000, 10});
+	Tester tester(TestData{10, 100, 10, 100000});
 
-	tester.run_tests();
-	tester.show_results();
-	tester.write_details("out.txt");
+	#ifdef CURRENT
+
+	tester.test_current_data(true);
+	tester.results_current_data();
+	//tester.details_current_data("details.txt");
+
+	#endif
+
+	#ifdef RANGE
+
+	tester.test_range_data(1000000, 50000, true);
+	tester.csv_range_data("diagram.csv");
+
+	#endif
+
+	#ifdef MANUAL
+
+	// TODO: Интерфейс.
+
+	#endif
 
 	return 0;
 }
+
+#undef CURRENT
+#undef RANGE
+#undef MANUAL
+
+/*
+ * (+) Придумать словесное объяснение константности синего графика.
+ * (+) Подобрать функцию для красного.
+ *
+ * Сделать разбиение на клетки для второго алгоритма.
+ * Формирование клеток учитывать при подсчете времени его работы.
+ */
