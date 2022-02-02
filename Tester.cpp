@@ -59,7 +59,7 @@ void Tester::test_current_data(bool output)
 
 	results.first.squares_amount = results.second.squares_amount = test_data.squares_amount;
 
-	srandom(static_cast<unsigned int>(time(nullptr)));
+	srand(static_cast<unsigned int>(time(nullptr)));
 
 	for (int i = 0; i < test_data.tests_amount; ++i)
 	{
@@ -69,7 +69,7 @@ void Tester::test_current_data(bool output)
 		squares.reserve(test_data.squares_amount);
 
 		for (int j = 0; j < test_data.squares_amount; ++j)
-			squares.push_back(Square{false, {static_cast<double>(random() % (test_data.area_range - test_data.side_length)), static_cast<double>(random() % (test_data.area_range - test_data.side_length))}});
+			squares.push_back(Square{false, {static_cast<double>(rand() % (test_data.area_range - test_data.side_length)), static_cast<double>(rand() % (test_data.area_range - test_data.side_length))}});
 
 		solver = new Solver(TaskData{test_data.error_conclude, test_data.side_length, squares});
 
@@ -146,23 +146,23 @@ void Tester::results_current_data()
 		     << setw(CELL_DATA_WIDTH) << results.first.task_results.at(i).total_time
 		     << setw(CELL_DATA_WIDTH) << results.second.task_results.at(i).total_time << "|\n";
 
-		cout << "|\t\t\t"
+		cout << "|\t    "
 		     << setw(CELL_TITLE_WIDTH) << "Time for step:"
 		     << setw(CELL_DATA_WIDTH) << results.first.task_results.at(i).step_time
 		     << setw(CELL_DATA_WIDTH) << results.second.task_results.at(i).step_time << "|\n";
 
-		cout << "|\t\t\t"
+		cout << "|\t    "
 		     << setw(CELL_TITLE_WIDTH) << "Steps amount:"
 		     << setw(CELL_DATA_WIDTH) << results.first.task_results.at(i).steps
 		     << setw(CELL_DATA_WIDTH) << results.second.task_results.at(i).steps << "|\n";
 
 		if (test_data.error_conclude)
-			cout << "|\t\t\t"
+			cout << "|\t    "
 			     << setw(CELL_TITLE_WIDTH) << "Error:"
 			     << setw(CELL_DATA_WIDTH) << results.first.task_results.at(i).error
 			     << setw(CELL_DATA_WIDTH) << results.second.task_results.at(i).error << "|\n";
 
-		cout << "|\t\t\t"
+		cout << "|\t    "
 		     << setw(CELL_TITLE_WIDTH) << "Points amount: "
 		     << setw(CELL_DATA_WIDTH) << results.first.task_results.at(i).points.size()
 		     << setw(CELL_DATA_WIDTH) << results.second.task_results.at(i).points.size() << "|\n";

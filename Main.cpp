@@ -1,6 +1,5 @@
 #define CURRENT
 //#define RANGE
-//#define MANUAL
 
 #ifdef CURRENT
 #include "Tester.h"
@@ -8,10 +7,6 @@
 
 #ifdef RANGE
 #include "Tester.h"
-#endif
-
-#ifdef MANUAL
-#include "Interface.h"
 #endif
 
 int main()
@@ -33,23 +28,13 @@ int main()
 
 	#endif
 
-	#ifdef MANUAL
-
-	// TODO: Интерфейс.
-
-	#endif
-
 	return 0;
 }
 
 #undef CURRENT
 #undef RANGE
-#undef MANUAL
 
 /*
- * (+) Придумать словесное объяснение константности синего графика.
- * (+) Подобрать функцию для красного.
- *
  * Сделать разбиение на клетки для второго алгоритма.
  * Формирование клеток учитывать при подсчете времени его работы.
  */
