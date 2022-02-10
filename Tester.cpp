@@ -71,7 +71,9 @@ void Tester::test_current_data(bool output)
 		for (int j = 0; j < test_data.squares_amount; ++j)
 			squares.push_back(Square{false, {static_cast<double>(rand() % (test_data.area_range - test_data.side_length)), static_cast<double>(rand() % (test_data.area_range - test_data.side_length))}});
 
-		solver = new Solver(TaskData{test_data.error_conclude, test_data.side_length, squares});
+		//cout << "b" << endl;
+
+		solver = new Solver(TaskData{test_data.error_conclude, test_data.area_range, test_data.side_length, squares});
 
 		if (output)
 			cout << "Simple algorithm...\n";
