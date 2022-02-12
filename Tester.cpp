@@ -49,7 +49,7 @@ inline double Tester::complexity_grade_greedy(unsigned int squares_amount)
 
 
 /*
- * Запускает решение задачи простым и жадным алгоритмами на одинаковых
+ * Запускает решение задачи простым и обоими жадными алгоритмами на одинаковых
  * случайно сгенерированных по текущему критерию тестовых данных.
  */
 void Tester::test_current_data(bool output)
@@ -105,7 +105,7 @@ void Tester::test_current_data(bool output)
 
 
 /*
- * Выводит на экран сводную таблицу по всем тестам для обоих
+ * Выводит на экран сводную таблицу по всем тестам для трех
  * алгоритмов, а также средние значения по полученным данным.
  */
 void Tester::results_current_data()
@@ -291,7 +291,8 @@ void Tester::details_current_data(const char *filename)
 
 
 /*
- * TODO: Написать комментарий.
+ * Запускает решение задачи простым и обоими жадными алгоритмами
+ * на наборе тестовых данных с возрастающим количеством квадратов.
  */
 void Tester::test_range_data(unsigned int high_squares_amount, unsigned int step, bool output)
 {
