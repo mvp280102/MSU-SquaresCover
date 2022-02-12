@@ -57,7 +57,7 @@ void Tester::test_current_data(bool output)
 	TaskResults res;
 	vector<Square> squares;
 
-	results.first.squares_amount = results.second.squares_amount = test_data.squares_amount;
+	results.first.squares_amount = results.second.first.squares_amount = results.second.second.squares_amount = test_data.squares_amount;
 
 	srand(static_cast<unsigned int>(time(nullptr)));
 
@@ -71,8 +71,6 @@ void Tester::test_current_data(bool output)
 		for (int j = 0; j < test_data.squares_amount; ++j)
 			squares.push_back(Square{false, {static_cast<double>(rand() % (test_data.area_range - test_data.side_length)), static_cast<double>(rand() % (test_data.area_range - test_data.side_length))}});
 
-		//cout << "b" << endl;
-
 		solver = new Solver(TaskData{test_data.error_conclude, test_data.area_range, test_data.side_length, squares});
 
 		if (output)
@@ -82,10 +80,16 @@ void Tester::test_current_data(bool output)
 		save_results(results.first, res);
 
 		if (output)
-			cout << "Greedy algorithm...\n";
+			cout << "Elementary greedy algorithm...\n";
 
-		res = solver->cover_greedy();
-		save_results(results.second, res);
+		res = solver->cover_greedy_elementary();
+		save_results(results.second.first, res);
+
+		if (output)
+			cout << "Improved greedy algorithm...\n";
+
+		res = solver->cover_greedy_improved();
+		save_results(results.second.second, res);
 
 		if (output)
 			cout << endl;
@@ -95,7 +99,8 @@ void Tester::test_current_data(bool output)
 	}
 
 	conclude_average(results.first);
-	conclude_average(results.second);
+	conclude_average(results.second.first);
+	conclude_average(results.second.second);
 }
 
 
@@ -113,19 +118,19 @@ void Tester::results_current_data()
 
 	cout << "| "
 	     << setw(COMMON_LABEL_WIDTH) << "Tests amount: "
-	     << setw(CELL_DATA_WIDTH * 2) << test_data.tests_amount << "|\n";
+	     << setw(CELL_DATA_WIDTH * 3) << test_data.tests_amount << "|\n";
 
 	cout << "| "
 	     << setw(COMMON_LABEL_WIDTH) << "Range: "
-	     << setw(CELL_DATA_WIDTH * 2) << test_data.area_range << "|\n";
+	     << setw(CELL_DATA_WIDTH * 3) << test_data.area_range << "|\n";
 
 	cout << "| "
 	     << setw(COMMON_LABEL_WIDTH) << "Squares amount: "
-	     << setw(CELL_DATA_WIDTH * 2) << test_data.squares_amount << "|\n";
+	     << setw(CELL_DATA_WIDTH * 3) << test_data.squares_amount << "|\n";
 
 	cout << "| "
 	     << setw(COMMON_LABEL_WIDTH) << "Side length: "
-	     << setw(CELL_DATA_WIDTH * 2) << test_data.side_length << "|\n";
+	     << setw(CELL_DATA_WIDTH * 3) << test_data.side_length << "|\n";
 
 	cout << DIVIDER
 		 << endl;
@@ -136,7 +141,8 @@ void Tester::results_current_data()
 	     << "| "
 	     << setw(COMMON_LABEL_WIDTH) << "ALGORITHM TYPE:"
 	     << setw(CELL_DATA_WIDTH) << "SIMPLE"
-	     << setw(CELL_DATA_WIDTH) << "GREEDY"
+	     << setw(CELL_DATA_WIDTH) << "GREEDY ELEM."
+		 << setw(CELL_DATA_WIDTH) << "GREEDY IMP."
 		 << "|\n";
 
 	for (int i = 0; i < test_data.tests_amount; ++i)
@@ -146,28 +152,33 @@ void Tester::results_current_data()
 
 		cout << setw(CELL_TITLE_WIDTH) << "Total time:"
 		     << setw(CELL_DATA_WIDTH) << results.first.task_results.at(i).total_time
-		     << setw(CELL_DATA_WIDTH) << results.second.task_results.at(i).total_time << "|\n";
+		     << setw(CELL_DATA_WIDTH) << results.second.first.task_results.at(i).total_time
+			 << setw(CELL_DATA_WIDTH) << results.second.second.task_results.at(i).total_time << "|\n";
 
 		cout << "|\t    "
 		     << setw(CELL_TITLE_WIDTH) << "Time for step:"
 		     << setw(CELL_DATA_WIDTH) << results.first.task_results.at(i).step_time
-		     << setw(CELL_DATA_WIDTH) << results.second.task_results.at(i).step_time << "|\n";
+		     << setw(CELL_DATA_WIDTH) << results.second.first.task_results.at(i).step_time
+			 << setw(CELL_DATA_WIDTH) << results.second.second.task_results.at(i).step_time<< "|\n";
 
 		cout << "|\t    "
 		     << setw(CELL_TITLE_WIDTH) << "Steps amount:"
 		     << setw(CELL_DATA_WIDTH) << results.first.task_results.at(i).steps
-		     << setw(CELL_DATA_WIDTH) << results.second.task_results.at(i).steps << "|\n";
+		     << setw(CELL_DATA_WIDTH) << results.second.first.task_results.at(i).steps
+			 << setw(CELL_DATA_WIDTH) << results.second.second.task_results.at(i).steps << "|\n";
 
 		if (test_data.error_conclude)
 			cout << "|\t    "
 			     << setw(CELL_TITLE_WIDTH) << "Error:"
 			     << setw(CELL_DATA_WIDTH) << results.first.task_results.at(i).error
-			     << setw(CELL_DATA_WIDTH) << results.second.task_results.at(i).error << "|\n";
+			     << setw(CELL_DATA_WIDTH) << results.second.first.task_results.at(i).error
+				 << setw(CELL_DATA_WIDTH) << results.second.second.task_results.at(i).error << "|\n";
 
 		cout << "|\t    "
 		     << setw(CELL_TITLE_WIDTH) << "Points amount: "
 		     << setw(CELL_DATA_WIDTH) << results.first.task_results.at(i).points.size()
-		     << setw(CELL_DATA_WIDTH) << results.second.task_results.at(i).points.size() << "|\n";
+		     << setw(CELL_DATA_WIDTH) << results.second.first.task_results.at(i).points.size()
+			 << setw(CELL_DATA_WIDTH) << results.second.second.task_results.at(i).points.size() << "|\n";
 	}
 
 	cout << DIVIDER
@@ -179,35 +190,41 @@ void Tester::results_current_data()
 		 << "| "
 		 << setw(COMMON_LABEL_WIDTH) << "ALGORITHM TYPE:"
 		 << setw(CELL_DATA_WIDTH) << "SIMPLE"
-		 << setw(CELL_DATA_WIDTH) << "GREEDY"
+		 << setw(CELL_DATA_WIDTH) << "GREEDY ELEM."
+		 << setw(CELL_DATA_WIDTH) << "GREEDY IMP."
 		 << "|\n";
 
 	cout << DIVIDER
 	     << "| "
 	     << setw(COMMON_LABEL_WIDTH) << "Average total time:"
 	     << setw(CELL_DATA_WIDTH) << results.first.average_total_time
-	     << setw(CELL_DATA_WIDTH) << results.second.average_total_time << "|\n";
+	     << setw(CELL_DATA_WIDTH) << results.second.first.average_total_time
+		 << setw(CELL_DATA_WIDTH) << results.second.second.average_total_time << "|\n";
 
 	cout << "| "
 	     << setw(COMMON_LABEL_WIDTH) << "Average time for step:"
 	     << setw(CELL_DATA_WIDTH) << results.first.average_step_time
-	     << setw(CELL_DATA_WIDTH) << results.second.average_step_time << "|\n";
+	     << setw(CELL_DATA_WIDTH) << results.second.first.average_step_time
+		 << setw(CELL_DATA_WIDTH) << results.second.second.average_step_time << "|\n";
 
 	cout << "| "
 	     << setw(COMMON_LABEL_WIDTH) << "Average steps amount:"
 	     << setw(CELL_DATA_WIDTH) << results.first.average_steps
-	     << setw(CELL_DATA_WIDTH) << results.second.average_steps << "|\n";
+	     << setw(CELL_DATA_WIDTH) << results.second.first.average_steps
+		 << setw(CELL_DATA_WIDTH) << results.second.second.average_steps << "|\n";
 
 	if (test_data.error_conclude)
 		cout << "| "
 		     << setw(COMMON_LABEL_WIDTH) << "Average error:"
 		     << setw(CELL_DATA_WIDTH) << results.first.average_error
-		     << setw(CELL_DATA_WIDTH) << results.second.average_error << "|\n";
+		     << setw(CELL_DATA_WIDTH) << results.second.first.average_error
+			 << setw(CELL_DATA_WIDTH) << results.second.second.average_error << "|\n";
 
 	cout << "| "
 	     << setw(COMMON_LABEL_WIDTH) << "Average points amount:"
 	     << setw(CELL_DATA_WIDTH) << results.first.average_points
-	     << setw(CELL_DATA_WIDTH) << results.second.average_points << "|\n";
+	     << setw(CELL_DATA_WIDTH) << results.second.first.average_points
+		 << setw(CELL_DATA_WIDTH) << results.second.second.average_points << "|\n";
 
 	cout << DIVIDER
 		 << endl;
@@ -303,10 +320,10 @@ void Tester::csv_range_data(const char *filename) const
 	if (!out.fail())
 	{
 		out << "Range, Side length, Squares amount, "
-			<< "Total time (SIMPLE), Total time (GREEDY), "
-			<< "Steps amount (SIMPLE), Steps amount (GREEDY), "
-			<< "Time for step (SIMPLE), Time for step (GREEDY), "
-			<< "Complexity grade (SIMPLE), Complexity grade (GREEDY)"
+			<< "Total time (SIMPLE), Total time (GREEDY ELEM.), Total time (GREEDY IMP.), "
+			<< "Steps amount (SIMPLE), Steps amount (GREEDY ELEM.), Steps amount (GREEDY IMP.), "
+			<< "Time/step (SIMPLE), Time/step (GREEDY ELEM.), Time/step (GREEDY IMP.), "
+			<< "Complexity (SIMPLE), Complexity (GREEDY ELEM.), Complexity (GREEDY IMP.)"
 			<< endl;
 
 		for (const auto & item : results_data)
@@ -315,13 +332,17 @@ void Tester::csv_range_data(const char *filename) const
 				<< test_data.side_length << ","
 			    << item.first.squares_amount << ","
 			    << item.first.average_total_time << ","
-			    << item.second.average_total_time << ","
+			    << item.second.first.average_total_time << ","
+				<< item.second.second.average_total_time << ","
 			    << item.first.average_steps << ","
-			    << item.second.average_steps << ","
+			    << item.second.first.average_steps << ","
+				<< item.second.second.average_steps << ","
 			    << item.first.average_step_time << ","
-			    << item.second.average_step_time << ","
+			    << item.second.first.average_step_time << ","
+				<< item.second.second.average_step_time << ","
 				<< item.first.average_total_time / complexity_grade_simple(item.first.squares_amount) << ","
-				<< item.second.average_total_time / complexity_grade_greedy(item.second.squares_amount)
+				<< item.second.first.average_total_time / complexity_grade_greedy(item.second.first.squares_amount) << ","
+				<< item.second.second.average_total_time / complexity_grade_greedy(item.second.second.squares_amount)
 				<< endl;
 		}
 	}

@@ -1,10 +1,10 @@
 #pragma once
 
-#define COMMON_TITLE_WIDTH 60
+#define COMMON_TITLE_WIDTH 75
 #define COMMON_LABEL_WIDTH 30
 #define CELL_TITLE_WIDTH 20
 #define CELL_DATA_WIDTH 15
-#define DIVIDER "*-------------------------------------------------------------*\n"
+#define DIVIDER "*----------------------------------------------------------------------------*\n"
 
 #include "Solver.h"
 
@@ -19,28 +19,28 @@ using namespace std;
 // Общие данные для тестов.
 struct TestData
 {
-	unsigned int tests_amount;                                          // Количество тестов.
-	unsigned int area_range;                                            // Размер части плоскости.
-	unsigned int side_length;                                           // Длина стороны одного квадрата.
-	unsigned int squares_amount;                                        // Количество квадратов.
-	bool error_conclude = false;                                        // Флаг необходимости вычисления ошибки.
+	unsigned int tests_amount;                                                                  // Количество тестов.
+	unsigned int area_range;                                                                    // Размер части плоскости.
+	unsigned int side_length;                                                                   // Длина стороны одного квадрата.
+	unsigned int squares_amount;                                                                // Количество квадратов.
+	bool error_conclude = false;                                                                // Флаг необходимости вычисления ошибки.
 };
 
 // Базовые результаты тестов.
 struct TestResultsBase
 {
-	unsigned int squares_amount = 0;                                    // Количество квадратов.
-	double average_total_time = 0;                                      // Среднее время, затраченное на тест.
-	double average_step_time = 0;                                       // Среднее время, затраченное на шаг теста.
-	unsigned long int average_steps = 0;                                // Среднее количество шагов в тесте.
+	unsigned int squares_amount = 0;                                                            // Количество квадратов.
+	double average_total_time = 0;                                                              // Среднее время, затраченное на тест.
+	double average_step_time = 0;                                                               // Среднее время, затраченное на шаг теста.
+	unsigned long int average_steps = 0;                                                        // Среднее количество шагов в тесте.
 };
 
 // Расширенные результаты тестов.
 struct TestResultsExtended : TestResultsBase
 {
-	unsigned long int average_error = 0;                                // Средняя ошибка для теста.
-	unsigned long int average_points = 0;                               // Среднее количество точек покрытия в тесте.
-	vector<TaskResults> task_results;                                   // Набор результатов тестов.
+	unsigned long int average_error = 0;                                                        // Средняя ошибка для теста.
+	unsigned long int average_points = 0;                                                       // Среднее количество точек покрытия в тесте.
+	vector<TaskResults> task_results;                                                           // Набор результатов тестов.
 };
 
 
@@ -49,10 +49,10 @@ class Tester
 {
 	private:
 
-	Solver *solver = nullptr;                                           // Экземпляр класса, решающего задачу.
-	TestData test_data{};                                               // Общие данные для тестов.
-	pair<TestResultsExtended, TestResultsExtended> results;             // Результаты тестов обоих алгоритмов.
-	vector< pair<TestResultsBase, TestResultsBase> > results_data;      // Набор результатов тестов обоих алгоритмов.
+	Solver *solver = nullptr;                                                                   // Экземпляр класса, решающего задачу.
+	TestData test_data{};                                                                       // Общие данные для тестов.
+	pair< TestResultsExtended, pair<TestResultsExtended, TestResultsExtended> > results;        // Результаты тестов трех алгоритмов.
+	vector< pair< TestResultsBase, pair<TestResultsBase, TestResultsBase> > > results_data;     // Набор результатов тестов трех алгоритмов.
 
 
 	/*
@@ -82,7 +82,7 @@ class Tester
 	 * ПАРАМЕТРЫ:
 	 * unsigned int squares_amount - количество квадратов
 	 */
-	static inline double complexity_grade_simple(unsigned int squares_amount) ;
+	static inline double complexity_grade_simple(unsigned int squares_amount);
 
 	/*
 	 * ОПИСАНИЕ ФУНКЦИИ:
@@ -92,7 +92,7 @@ class Tester
 	 * ПАРАМЕТРЫ:
 	 * unsigned int squares_amount - количество квадратов
 	 */
-	static inline double complexity_grade_greedy(unsigned int squares_amount) ;
+	static inline double complexity_grade_greedy(unsigned int squares_amount);
 
 
 	public:
