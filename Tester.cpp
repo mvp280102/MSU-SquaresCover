@@ -122,7 +122,7 @@ void Tester::results_current_data()
 	     << setw(CELL_DATA_WIDTH * 3) << test_data.tests_amount << "|\n";
 
 	cout << "| "
-	     << setw(COMMON_LABEL_WIDTH) << "Range: "
+	     << setw(COMMON_LABEL_WIDTH) << "Area range: "
 	     << setw(CELL_DATA_WIDTH * 3) << test_data.area_range << "|\n";
 
 	cout << "| "
@@ -229,65 +229,6 @@ void Tester::results_current_data()
 
 	cout << DIVIDER
 		 << endl;
-}
-
-
-/*
- * TODO: Написать комментарий.
- */
-void Tester::details_current_data(const char *filename)
-{
-	/*
-	ofstream out;
-
-	out.open(filename);
-
-	if (out.fail())
-	{
-		cout << "Output file opening error!\n"
-			 << "Aborting application!\n";
-
-		exit(1);
-	}
-
-	out << test_data.tests_amount << " tests:\n"
-		<< endl
-		<< "Common test_data:\n"
-		<< "Range: " << test_data.area_range << ".\n"
-		<< "Squares amount: " << test_data.squares_amount << ".\n"
-		<< "Side length: " << test_data.side_length << ".\n"
-		<< endl << endl;
-
-	for (int i = 0; i < task_results.size(); ++i)
-	{
-		out << "Test " << i + 1 << ":\n" << endl;
-
-		out << "Coordinates of squares:\n";
-
-		for (auto & square : task_results.at(i).squares)
-			out << "(" << square.corner.x << "; " << square.corner.y << ")\n";
-
-		out << endl
-			<< "Coordinates of points:\n";
-
-		for (auto & point : task_results.at(i).points)
-			out << "(" << point.x << "; " << point.y << ")\n";
-
-		out << endl
-			<< "Points amount: " << task_results.at(i).points.size() << ".\n"
-			<< "Steps amount: " << task_results.at(i).steps << ".\n"
-		    << "Time: " << task_results.at(i).total_time << " s.\n"
-		    << endl;
-	}
-
-	out << endl
-		<< "Average total_time for test: " << average_total_time << " s.\n"
-		<< "Average points amount: " << average_points << ".\n"
-		<< "Average steps amount: " << average_steps << ".\n"
-		<< endl;
-
-	out.close();
-	*/
 }
 
 
