@@ -6,23 +6,23 @@
 
 int main()
 {
-	Tester tester(TestData{10, 100, 10, 100000});
+    Tester tester(TestData{10, 100, 10, 100000});
 
-	#ifdef CURRENT
+    #ifdef CURRENT
 
-	tester.test_current_data(true);
-	tester.results_current_data();
+    tester.test_current_data(true);
+    tester.results_current_data();
 
-	#endif
+    #endif
 
-	#ifdef RANGE
+    #ifdef RANGE
 
-	tester.test_range_data(1000000, 50000, true);
-	tester.csv_range_data("diagram.csv");
+    tester.test_range_data(1000000, 50000, true);
+    tester.csv_range_data("diagram.csv");
 
-	#endif
+    #endif
 
-	return 0;
+    return 0;
 }
 
 #undef CURRENT

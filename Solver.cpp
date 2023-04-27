@@ -6,8 +6,8 @@
  */
 bool Solver::belong(const Point &point, const Square &square) const
 {
-	return ((point.x > square.corner.x) && (point.x < square.corner.x + data.side_length)) &&
-			((point.y > square.corner.y) && (point.y < square.corner.y + data.side_length));
+    return ((point.x > square.corner.x) && (point.x < square.corner.x + data.side_length)) &&
+            ((point.y > square.corner.y) && (point.y < square.corner.y + data.side_length));
 }
 
 
@@ -17,30 +17,30 @@ bool Solver::belong(const Point &point, const Square &square) const
  */
 Point* Solver::middle(unsigned int first, unsigned int second)
 {
-	Segment x1{}, x2{}, y1{}, y2{};
-	Point *req = nullptr;
+    Segment x1{}, x2{}, y1{}, y2{};
+    Point *req = nullptr;
 
-	x1.begin = data.squares.at(first).corner.x;
-	x1.end = x1.begin + data.side_length;
+    x1.begin = data.squares.at(first).corner.x;
+    x1.end = x1.begin + data.side_length;
 
-	y1.begin = data.squares.at(first).corner.y;
-	y1.end = y1.begin + data.side_length;
+    y1.begin = data.squares.at(first).corner.y;
+    y1.end = y1.begin + data.side_length;
 
-	x2.begin = data.squares.at(second).corner.x;
-	x2.end = x2.begin + data.side_length;
+    x2.begin = data.squares.at(second).corner.x;
+    x2.end = x2.begin + data.side_length;
 
-	y2.begin = data.squares.at(second).corner.y;
-	y2.end = y2.begin + data.side_length;
+    y2.begin = data.squares.at(second).corner.y;
+    y2.end = y2.begin + data.side_length;
 
-	if (((x1.end > x2.begin) || (x2.end > x1.begin)) && ((y1.end > y2.begin) || (y2.end > y1.begin)))
-	{
-		req = new Point;
+    if (((x1.end > x2.begin) || (x2.end > x1.begin)) && ((y1.end > y2.begin) || (y2.end > y1.begin)))
+    {
+        req = new Point;
 
-		req->x = (x1.end + x2.begin) / 2.0;
-		req->y = (y1.end + y2.begin) / 2.0;
-	}
+        req->x = (x1.end + x2.begin) / 2.0;
+        req->y = (y1.end + y2.begin) / 2.0;
+    }
 
-	return req;
+    return req;
 }
 
 
@@ -49,14 +49,14 @@ Point* Solver::middle(unsigned int first, unsigned int second)
  */
 int Solver::intersection(const Segment &first, const Segment &second)
 {
-	if ((first.begin < second.begin) && (first.end > second.begin))
-		return -1;
-	else if ((first.begin < second.end) && (first.end > second.end))
-		return 1;
-	else if ((first.begin >= second.begin) && (first.end <= second.end))
-		return 2;
-	else
-		return 0;
+    if ((first.begin < second.begin) && (first.end > second.begin))
+        return -1;
+    else if ((first.begin < second.end) && (first.end > second.end))
+        return 1;
+    else if ((first.begin >= second.begin) && (first.end <= second.end))
+        return 2;
+    else
+        return 0;
 }
 
 
@@ -65,54 +65,54 @@ int Solver::intersection(const Segment &first, const Segment &second)
  */
 void Solver::greedy_common(unsigned int size)
 {
-	Point point{};
-	Segment x_intersection{}, y_intersection{},
-			x_current{}, y_current{};
+    Point point{};
+    Segment x_intersection{}, y_intersection{},
+            x_current{}, y_current{};
 
-	int x_flag, y_flag;
+    int x_flag, y_flag;
 
-	for (unsigned int i = 0; i < size; ++i)
-		if (!data.squares.at(i).covered)
-		{
-			x_intersection.begin = data.squares.at(i).corner.x;
-			x_intersection.end = x_intersection.begin + data.side_length;
+    for (unsigned int i = 0; i < size; ++i)
+        if (!data.squares.at(i).covered)
+        {
+            x_intersection.begin = data.squares.at(i).corner.x;
+            x_intersection.end = x_intersection.begin + data.side_length;
 
-			y_intersection.begin = data.squares.at(i).corner.y;
-			y_intersection.end = y_intersection.begin + data.side_length;
+            y_intersection.begin = data.squares.at(i).corner.y;
+            y_intersection.end = y_intersection.begin + data.side_length;
 
-			for (unsigned int j = i + 1; j < size; ++j)
-				if (++results.steps && !data.squares.at(j).covered)
-				{
-					x_current.begin = data.squares.at(j).corner.x;
-					x_current.end = x_current.begin + data.side_length;
+            for (unsigned int j = i + 1; j < size; ++j)
+                if (++results.steps && !data.squares.at(j).covered)
+                {
+                    x_current.begin = data.squares.at(j).corner.x;
+                    x_current.end = x_current.begin + data.side_length;
 
-					y_current.begin = data.squares.at(j).corner.y;
-					y_current.end = y_current.begin + data.side_length;
+                    y_current.begin = data.squares.at(j).corner.y;
+                    y_current.end = y_current.begin + data.side_length;
 
-					x_flag = intersection(x_intersection, x_current);
-					y_flag = intersection(y_intersection, y_current);
+                    x_flag = intersection(x_intersection, x_current);
+                    y_flag = intersection(y_intersection, y_current);
 
-					if (x_flag && y_flag)
-					{
-						if (x_flag == -1) x_intersection.begin = x_current.begin;
-						else if (x_flag == 1) x_intersection.end = x_current.end;
+                    if (x_flag && y_flag)
+                    {
+                        if (x_flag == -1) x_intersection.begin = x_current.begin;
+                        else if (x_flag == 1) x_intersection.end = x_current.end;
 
-						if (y_flag == -1) y_intersection.begin = y_current.begin;
-						else if (y_flag == 1) y_intersection.end = y_current.end;
+                        if (y_flag == -1) y_intersection.begin = y_current.begin;
+                        else if (y_flag == 1) y_intersection.end = y_current.end;
 
-						data.squares.at(j).covered = true;
-					}
-					else
-						continue;
-				}
+                        data.squares.at(j).covered = true;
+                    }
+                    else
+                        continue;
+                }
 
-			data.squares.at(i).covered = true;
+            data.squares.at(i).covered = true;
 
-			point.x = (x_intersection.begin + x_intersection.end) / 2.0;
-			point.y = (y_intersection.begin + y_intersection.end) / 2.0;
+            point.x = (x_intersection.begin + x_intersection.end) / 2.0;
+            point.y = (y_intersection.begin + y_intersection.end) / 2.0;
 
-			results.points.push_back(point);
-		}
+            results.points.push_back(point);
+        }
 }
 
 
@@ -121,26 +121,26 @@ void Solver::greedy_common(unsigned int size)
  */
 unsigned long int Solver::error()
 {
-	unsigned long int result = 0;
+    unsigned long int result = 0;
 
-	for (auto &square : data.squares)
-	{
-		bool flag = false;
+    for (auto &square : data.squares)
+    {
+        bool flag = false;
 
-		for (auto &point : results.points)
-			if (belong(point, square))
-			{
-				flag = !flag;
+        for (auto &point : results.points)
+            if (belong(point, square))
+            {
+                flag = !flag;
 
-				if (!flag)
-				{
-					++result;
-					break;
-				}
-			}
-	}
+                if (!flag)
+                {
+                    ++result;
+                    break;
+                }
+            }
+    }
 
-	return result;
+    return result;
 }
 
 
@@ -150,53 +150,53 @@ unsigned long int Solver::error()
  */
 TaskResults& Solver::cover_simple()
 {
-	Point *req;
+    Point *req;
 
-	clock_t start, stop;
-	bool intersected = false;
+    clock_t start, stop;
+    bool intersected = false;
 
-	for (auto & square : data.squares)
-		square.covered = false;
+    for (auto & square : data.squares)
+        square.covered = false;
 
-	results.steps = 0;
-	results.points.clear();
+    results.steps = 0;
+    results.points.clear();
 
-	start = clock();
+    start = clock();
 
-	for (int i = 0; i < data.squares.size(); ++i)
-	{
-		if (intersected)
-		{
-			intersected = false;
-			continue;
-		}
+    for (int i = 0; i < data.squares.size(); ++i)
+    {
+        if (intersected)
+        {
+            intersected = false;
+            continue;
+        }
 
-		for (int j = i + 1; j < data.squares.size(); ++j)
-		{
-			req = middle(i, j);
+        for (int j = i + 1; j < data.squares.size(); ++j)
+        {
+            req = middle(i, j);
 
-			if (++results.steps && !data.squares.at(i).covered && !data.squares.at(i).covered && (req != nullptr))
-			{
-				data.squares.at(i).covered = data.squares.at(j).covered = true;
-				results.points.push_back(*req);
+            if (++results.steps && !data.squares.at(i).covered && !data.squares.at(i).covered && (req != nullptr))
+            {
+                data.squares.at(i).covered = data.squares.at(j).covered = true;
+                results.points.push_back(*req);
 
-				intersected = true;
-				break;
-			}
-		}
-	}
+                intersected = true;
+                break;
+            }
+        }
+    }
 
-	for (int i = 0; i < data.squares.size(); ++i)
-		if (++results.steps && !data.squares.at(i).covered)
-			results.points.push_back(*middle(i, i));
+    for (int i = 0; i < data.squares.size(); ++i)
+        if (++results.steps && !data.squares.at(i).covered)
+            results.points.push_back(*middle(i, i));
 
-	stop = clock();
+    stop = clock();
 
-	results.total_time = (double)(stop - start) / CLOCKS_PER_SEC;
-	results.step_time = results.total_time / (double)results.steps;
-	results.error = data.error_conclude ? error() : 0;
+    results.total_time = (double)(stop - start) / CLOCKS_PER_SEC;
+    results.step_time = results.total_time / (double)results.steps;
+    results.error = data.error_conclude ? error() : 0;
 
-	return results;
+    return results;
 }
 
 
@@ -206,26 +206,26 @@ TaskResults& Solver::cover_simple()
  */
 TaskResults& Solver::cover_greedy_elementary()
 {
-	clock_t start, stop;
+    clock_t start, stop;
 
-	for (auto & square : data.squares)
-		square.covered = false;
+    for (auto & square : data.squares)
+        square.covered = false;
 
-	results.steps = 0;
-	results.points.clear();
+    results.steps = 0;
+    results.points.clear();
 
-	start = clock();
+    start = clock();
 
-	greedy_common(data.squares.size());
+    greedy_common(data.squares.size());
 
-	stop = clock();
+    stop = clock();
 
-	results.total_time = (double)(stop - start) / CLOCKS_PER_SEC;
-	results.step_time = results.total_time / (double)results.steps;
-	results.error = data.error_conclude ? error() : 0;
+    results.total_time = (double)(stop - start) / CLOCKS_PER_SEC;
+    results.step_time = results.total_time / (double)results.steps;
+    results.error = data.error_conclude ? error() : 0;
 
-	return results;
-}
+    return results;
+    }
 
 
 /*
@@ -234,67 +234,67 @@ TaskResults& Solver::cover_greedy_elementary()
  */
 TaskResults& Solver::cover_greedy_improved()
 {
-	Segment x_projection{}, y_projection{};
+    Segment x_projection{}, y_projection{};
 
-	clock_t start, stop;
+    clock_t start, stop;
 
-	for (auto & square : data.squares)
-		square.covered = false;
+    for (auto & square : data.squares)
+        square.covered = false;
 
-	results.steps = 0;
-	results.points.clear();
+    results.steps = 0;
+    results.points.clear();
 
-	areas.resize(data.area_range / (2 * data.side_length));
+    areas.resize(data.area_range / (2 * data.side_length));
 
-	for (auto & area : areas)
-		area.resize(data.area_range / (2 * data.side_length));
+    for (auto & area : areas)
+        area.resize(data.area_range / (2 * data.side_length));
 
-	start = clock();
+    start = clock();
 
-	for (unsigned int i = 0; i < data.squares.size(); ++i)
-	{
-		x_projection.begin = data.squares.at(i).corner.x / (2 * data.side_length);
-		x_projection.end = (data.squares.at(i).corner.x + data.side_length) / (2 * data.side_length);
+    for (unsigned int i = 0; i < data.squares.size(); ++i)
+    {
+        x_projection.begin = data.squares.at(i).corner.x / (2 * data.side_length);
+        x_projection.end = (data.squares.at(i).corner.x + data.side_length) / (2 * data.side_length);
 
-		y_projection.begin = data.squares.at(i).corner.y / (2 * data.side_length);
-		y_projection.end = (data.squares.at(i).corner.y + data.side_length) / (2 * data.side_length);
+        y_projection.begin = data.squares.at(i).corner.y / (2 * data.side_length);
+        y_projection.end = (data.squares.at(i).corner.y + data.side_length) / (2 * data.side_length);
 
-		if (x_projection.begin == x_projection.end)
-		{
-			if (y_projection.begin == y_projection.end)
-				areas.at(static_cast<unsigned int>(x_projection.begin)).at(static_cast<unsigned int>(y_projection.begin)).push_back(i);
-			else
-			{
-				areas.at(static_cast<unsigned int>(x_projection.begin)).at(static_cast<unsigned int>(y_projection.begin)).push_back(i);
-				areas.at(static_cast<unsigned int>(x_projection.begin)).at(static_cast<unsigned int>(y_projection.end)).push_back(i);
-			}
-		}
-		else
-		{
-			if (y_projection.begin == y_projection.end)
-			{
-				areas.at(static_cast<unsigned int>(x_projection.begin)).at(static_cast<unsigned int>(y_projection.begin)).push_back(i);
-				areas.at(static_cast<unsigned int>(x_projection.end)).at(static_cast<unsigned int>(y_projection.begin)).push_back(i);
-			}
-			else
-			{
-				areas.at(static_cast<unsigned int>(x_projection.begin)).at(static_cast<unsigned int>(y_projection.begin)).push_back(i);
-				areas.at(static_cast<unsigned int>(x_projection.begin)).at(static_cast<unsigned int>(y_projection.end)).push_back(i);
-				areas.at(static_cast<unsigned int>(x_projection.end)).at(static_cast<unsigned int>(y_projection.begin)).push_back(i);
-				areas.at(static_cast<unsigned int>(x_projection.end)).at(static_cast<unsigned int>(y_projection.end)).push_back(i);
-			}
-		}
-	}
+        if (x_projection.begin == x_projection.end)
+        {
+            if (y_projection.begin == y_projection.end)
+                areas.at(static_cast<unsigned int>(x_projection.begin)).at(static_cast<unsigned int>(y_projection.begin)).push_back(i);
+            else
+            {
+                areas.at(static_cast<unsigned int>(x_projection.begin)).at(static_cast<unsigned int>(y_projection.begin)).push_back(i);
+                areas.at(static_cast<unsigned int>(x_projection.begin)).at(static_cast<unsigned int>(y_projection.end)).push_back(i);
+            }
+        }
+        else
+        {
+            if (y_projection.begin == y_projection.end)
+            {
+                areas.at(static_cast<unsigned int>(x_projection.begin)).at(static_cast<unsigned int>(y_projection.begin)).push_back(i);
+                areas.at(static_cast<unsigned int>(x_projection.end)).at(static_cast<unsigned int>(y_projection.begin)).push_back(i);
+            }
+            else
+            {
+                areas.at(static_cast<unsigned int>(x_projection.begin)).at(static_cast<unsigned int>(y_projection.begin)).push_back(i);
+                areas.at(static_cast<unsigned int>(x_projection.begin)).at(static_cast<unsigned int>(y_projection.end)).push_back(i);
+                areas.at(static_cast<unsigned int>(x_projection.end)).at(static_cast<unsigned int>(y_projection.begin)).push_back(i);
+                areas.at(static_cast<unsigned int>(x_projection.end)).at(static_cast<unsigned int>(y_projection.end)).push_back(i);
+            }
+        }
+    }
 
-	for (auto & area : areas)
-		for (auto & j : area)
-			greedy_common(j.size());
+    for (auto & area : areas)
+        for (auto & j : area)
+            greedy_common(j.size());
 
-	stop = clock();
+    stop = clock();
 
-	results.total_time = (double)(stop - start) / CLOCKS_PER_SEC;
-	results.step_time = results.total_time / (double)results.steps;
-	results.error = data.error_conclude ? error() : 0;
+    results.total_time = (double)(stop - start) / CLOCKS_PER_SEC;
+    results.step_time = results.total_time / (double)results.steps;
+    results.error = data.error_conclude ? error() : 0;
 
-	return results;
+    return results;
 }
